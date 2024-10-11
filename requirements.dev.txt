@@ -1,0 +1,8 @@
+# Development dependencies
+
+ipython
+ipdb
+pudb
+
+# Install project as editable
+-e .
