@@ -20,7 +20,7 @@ pip install yourname-dundie
 ```
 
 ```py
-pip install -e `.[dev]`
+pip install -e '.[dev]'
 ```
 
 ## Usage
