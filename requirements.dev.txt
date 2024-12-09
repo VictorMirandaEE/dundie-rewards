@@ -4,6 +4,12 @@ ipython
 ipdb
 pudb
 pytest-watch
+flake8
+pyproject-flake8
+black
+isort
+pep8-naming
+mypy
 
 # Install project as editable
 -e .
