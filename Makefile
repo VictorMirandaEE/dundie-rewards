@@ -1,13 +1,14 @@
-.PHONY: install virtualenv ipython clean test
+.PHONY: install virtenv ipython test watch clean
 
 
-install:
-	@echo "Installing for dev environment"
+install: virtenv
+	@echo "Installing for dev and test environments"
 	@.venv/bin/python -m pip install -e '.[test,dev]'
 
 
-virtualenv:
-	@.venv/bin/python -m pip -m venv .venv
+virtenv:
+	@python3 -m venv .venv
+	@.venv/bin/python -m pip install --upgrade pip
 
 
 ipython:
@@ -23,7 +24,8 @@ watch:
 	@ls **/*.py | entr pytest
 
 
-clean:            ## Clean unused files.
+# Clean unused files.
+clean:
 	@find ./ -name '*.pyc' -exec rm -f {} \;
 	@find ./ -name '__pycache__' -exec rm -rf {} \;
 	@find ./ -name 'Thumbs.db' -exec rm -f {} \;

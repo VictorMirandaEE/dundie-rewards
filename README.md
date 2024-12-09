@@ -10,7 +10,7 @@ Employees can redeem their points on a credit card once a year to spend wherever
 
 We agreed in the contract that the MVP (Minimum Viable Product) would be a version to be run on the terminal and, in the future, it will also have UI, web, and API interfaces.
 
-Current employee data will be provided in a file in .csv or .json formats, which can be used for future versions. `Name, Department, Position, Email`
+Current employee data will be provided in a file in CSV or JSON formats, which can be used for future versions: `Name, Department, Position, Email`
 
 
 ## Installation
