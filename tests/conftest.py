@@ -1,5 +1,6 @@
 MARKER = """\
 unit: Mark unit test
+integration: Mark integration test
 high: High priority
 medium: Medium priority
 low: Low priority
