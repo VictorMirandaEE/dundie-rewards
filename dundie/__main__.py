@@ -1,3 +1,8 @@
+"""Entry point for the CLI.
+
+- Used to help setuptool identification
+"""
+
 from dundie.cli import main
 
 

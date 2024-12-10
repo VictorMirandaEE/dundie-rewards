@@ -1,3 +1,5 @@
+"""dundie load subcommand unit test"""
+
 import pytest
 from dundie.core import load
 from .constants import EMPLOYEES_FILE
