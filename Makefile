@@ -2,7 +2,7 @@
 
 
 install: virtenv
-	@echo "Installing for dev and test environments"
+	@echo "Installing for dev and test environments - Development Mode (a.k.a. “Editable Installs”)"
 	@.venv/bin/python -m pip install -e '.[test,dev]'
 
 

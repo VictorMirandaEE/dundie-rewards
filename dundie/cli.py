@@ -1,3 +1,5 @@
+"""CLI (Command Line Interface) module of dundie"""
+
 import argparse
 from dundie.core import load
 

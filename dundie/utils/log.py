@@ -1,3 +1,5 @@
+"""Logging module for dundie"""
+
 import os
 import logging
 from logging import handlers

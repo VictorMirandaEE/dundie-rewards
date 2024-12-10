@@ -1,3 +1,5 @@
+"""dundie load subcommand integration test"""
+
 import pytest
 from subprocess import check_output
 
