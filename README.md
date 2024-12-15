@@ -29,4 +29,4 @@ pip install -e '.[dev]'
 dundie --help
 ```
 
-![](./assets/dundie.gif)
+![](./assets/dunder-mifflin-logo.png)

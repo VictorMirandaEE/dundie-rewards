@@ -13,8 +13,10 @@ def load(filepath: str):
 
     >>> len(load("assets/employees.csv"))
     2
-    >>> load("assets/employees.csv")[0][0]
-    'J'
+    >>> load("assets/employees.csv")[0][:3]
+    'Jim'
+    >>> load("assets/employees.csv")[1][:6]
+    'Dwight'
     """
     try:
         with open(filepath) as file:

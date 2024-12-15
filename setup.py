@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 def read(*paths):
     """Safely read file contents
     >>> read("project_name", "VERSION")
-    '0.1.0''
+    '0.1.0'
     >>> read("README.md")
     ...
     """
