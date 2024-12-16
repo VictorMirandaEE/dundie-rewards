@@ -1,5 +1,7 @@
 """Main place to adjust pytest settings and creating global fixtures."""
 
+import pytest
+
 MARKER = """\
 unit: Mark unit test
 integration: Mark integration test
