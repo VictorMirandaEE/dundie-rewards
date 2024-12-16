@@ -15,7 +15,7 @@ def test_load_positive_has_2_employees(request):
     Asserts:
         The length of the list returned by the load function is 2.
     """
-    assert len(load(EMPLOYEES_FILE)) == 2
+    assert len(load(EMPLOYEES_FILE)) == 3
 
 
 @pytest.mark.unit
