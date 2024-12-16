@@ -166,3 +166,9 @@ cython_debug/
 
 # MacOS
 .DS_Store
+
+# Logfiles
+*.log.*
+
+# XML
+*.xml
