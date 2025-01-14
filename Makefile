@@ -1,4 +1,4 @@
-.PHONY: install virtenv ipython test watch clean
+.PHONY: install virtenv ipython test testci watch clean
 
 
 install: virtenv
@@ -16,7 +16,7 @@ ipython:
 
 
 test:
-	@.venv/bin/pytest -vv -s
+	@.venv/bin/pytest -s
 
 
 watch:
