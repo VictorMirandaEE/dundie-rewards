@@ -34,6 +34,13 @@ jobs:
         run: isort --profile black --check-only --diff .
       - name: Run code formatting check
         run: black --check --diff .
+      - uses: actions/checkout@master
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Run PEP8
+        uses: quentinguidee/pep8-action@v1
+        with:
+          arguments: '--max-line-length=120'
   tests:
     needs: lint
     strategy:
