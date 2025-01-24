@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ['3.12']
+        python-version: ['3.13']
         os: [ubuntu-latest]
     runs-on: ${{matrix.os}}
     steps:
@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.12']
+        python-version: ['3.13']
         os: [ubuntu-latest]
     runs-on: ${{matrix.os}}
     steps:

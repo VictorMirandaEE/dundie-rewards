@@ -9,7 +9,7 @@ max-line-length = 79
 
 [tool.black]
 line-length = 79
-target-version = ["py39", "py312"]
+target-version = ["py313"]
 
 [tool.isort]
 profile = "black"
