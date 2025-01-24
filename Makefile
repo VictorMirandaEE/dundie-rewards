@@ -27,6 +27,9 @@ watch:
 lint:
 	@.venv/bin/pflake8
 
+fmt:
+	@.venv/bin/isort --profile black .
+	@.venv/bin/black .
 
 # Clean unused files.
 clean:
