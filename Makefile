@@ -1,4 +1,4 @@
-.PHONY: install virtenv ipython test testci watch clean
+.PHONY: install virtenv ipython test testci watch flake8 clean
 
 
 install: virtenv
@@ -22,6 +22,10 @@ test:
 watch:
 	# @.venv/bin/ptw -- -vv -s
 	@ls **/*.py | entr pytest
+
+
+lint:
+	@.venv/bin/pflake8
 
 
 # Clean unused files.
