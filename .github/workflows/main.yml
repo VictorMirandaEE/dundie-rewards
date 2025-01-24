@@ -30,6 +30,10 @@ jobs:
         run: pip install '.[test]'
       - name: Run code style check
         run: pflake8
+      - name: Run code import order check
+        run: isort --profile black --check-only --diff .
+      - name: Run code formatting check
+        run: black --check --diff .
   tests:
     needs: lint
     strategy:
