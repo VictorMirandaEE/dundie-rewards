@@ -1,1 +1,5 @@
 pytest
+
+# Code quality
+flake8
+pyproject-flake8
