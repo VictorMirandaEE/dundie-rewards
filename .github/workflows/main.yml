@@ -22,8 +22,8 @@ jobs:
         os: [ubuntu-latest]
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{matrix.python-version}}
       - name: Install Project
@@ -34,6 +34,7 @@ jobs:
         run: isort --profile black --check-only --diff .
       - name: Run code formatting check
         run: black --check --diff .
+      - uses: psf/black@stable
   tests:
     needs: lint
     strategy:
@@ -43,8 +44,8 @@ jobs:
         os: [ubuntu-latest]
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{matrix.python-version}}
       - name: Install Project
