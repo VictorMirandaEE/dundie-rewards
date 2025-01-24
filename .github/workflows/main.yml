@@ -6,50 +6,50 @@ permissions:
 
 on:
   push:
-      branches:
-          - "main"
+    branches:
+      - "main"
   pull_request:
-      branches:
-          - "main"
+    branches:
+      - "main"
   workflow_dispatch:
-
+    
 jobs:
   lint:
     strategy:
-        fail-fast: true
-        matrix:
-            python-version: ['3.12']
-            os: [ubuntu-latest]
+      fail-fast: true
+      matrix:
+        python-version: ['3.12']
+        os: [ubuntu-latest]
     runs-on: ${{matrix.os}}
     steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-python@v2
-          with:
-            python-version: ${{matrix.python-version}}
-        - name: Install Project
-          run: pip install '.[test]'
-        - name: Run code style check
-          run: pflake8
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{matrix.python-version}}
+      - name: Install Project
+        run: pip install '.[test]'
+      - name: Run code style check
+        run: pflake8
   tests:
     needs: lint
     strategy:
-        fail-fast: false
-        matrix:
-            python-version: ['3.9', '3.12']
-            os: [ubuntu-latest]
+      fail-fast: false
+      matrix:
+        python-version: ['3.9', '3.12']
+        os: [ubuntu-latest]
     runs-on: ${{matrix.os}}
     steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-python@v2
-          with:
-            python-version: ${{matrix.python-version}}
-        - name: Install Project
-          run: pip install '.[test]'
-        - name: Run Tests
-          run: pytest -v --junitxml=test-result.xml
-        - name: Publish Test Results in JUnit XML format
-          uses: EnricoMi/publish-unit-test-result-action@v2
-          if: always()
-          with:
-            files: test-result.xml
-            check_name: Test Results (Python ${{matrix.python-version}})
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{matrix.python-version}}
+      - name: Install Project
+        run: pip install '.[test]'
+      - name: Run Tests
+        run: pytest -v --junitxml=test-result.xml
+      - name: Publish Test Results in JUnit XML format
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: test-result.xml
+          check_name: Test Results (Python ${{matrix.python-version}})
