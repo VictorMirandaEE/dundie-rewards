@@ -6,3 +6,12 @@ testpaths = ["tests", "integration"]
 [tool.flake8]
 exclude = [".venv", "build"]
 max-line-length = 79
+
+[tool.black]
+line-length = 79
+target-version = ["py39", "py312"]
+
+[tool.isort]
+profile = "black"
+src_paths = ["dundie", "tests", "integration"]
+multi_line_output = 3  # Vertical Hanging Indent
