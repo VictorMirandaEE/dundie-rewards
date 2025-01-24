@@ -31,10 +31,9 @@ jobs:
       - name: Run code style check
         run: pflake8
       - name: Run code import order check
-        run: isort --profile black --check-only --diff .
+        uses: isort/isort-action@v1
       - name: Run code formatting check
-        run: black --check --diff .
-      - uses: psf/black@stable
+        uses: psf/black@stable
   tests:
     needs: lint
     strategy:
