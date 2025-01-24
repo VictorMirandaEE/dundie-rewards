@@ -1,8 +1,8 @@
 """dundie load subcommand integration test"""
 
-import pytest
-
 from subprocess import CalledProcessError, check_output
+
+import pytest
 
 
 @pytest.mark.integration
