@@ -13,7 +13,7 @@ log = logging.getLogger("dundie")
 # logfile = sys.argv[0]
 # logfile = logfile[2:-3] + ".log"
 fmt = logging.Formatter(
-    "%(asctime)s  %(name)s  %(levelname)s l:%(lineno)d f:%(filename)s: %(message)s"
+    "%(asctime)s %(name)s %(levelname)s l:%(lineno)d f:%(filename)s: %(message)s"
 )
 
 
@@ -27,8 +27,9 @@ def get_logger(logfile="dundie.log"):
         _type_: _description_
     """
     # logging handler
-    # ch = logging.StreamHandler() # write to console/terminal/stderr by default
-    # the log file has the same name as the script with the extension .log
+    # ch = logging.StreamHandler() # write to console/terminal/stderr
+    # by default the log file has the same name as the script with the
+    # extension .log
     fh = handlers.RotatingFileHandler(
         logfile,
         maxBytes=500,  # recommended 10**6

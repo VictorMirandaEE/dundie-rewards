@@ -1,7 +1,7 @@
 """CLI (Command Line Interface) module of dundie"""
 
 import argparse
-from dundie.core import load
+from dundie.core import load  # noqa
 
 
 def main():
