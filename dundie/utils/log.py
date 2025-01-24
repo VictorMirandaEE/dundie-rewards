@@ -1,7 +1,7 @@
 """Logging module for dundie"""
 
-import os
 import logging
+import os
 from logging import handlers
 
 # TODO: Use lib (loguru)
@@ -13,7 +13,7 @@ log = logging.getLogger("dundie")
 # logfile = sys.argv[0]
 # logfile = logfile[2:-3] + ".log"
 fmt = logging.Formatter(
-    "%(asctime)s %(name)s %(levelname)s l:%(lineno)d f:%(filename)s: %(message)s"
+    "%(asctime)s %(name)s %(levelname)s l:%(lineno)d f:%(filename)s: %(message)s"  # noqa: E501
 )
 
 
