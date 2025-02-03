@@ -1,7 +1,17 @@
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q -vv"
-testpaths = [
-    "tests",
-    "integration",
-]
+testpaths = ["tests", "integration"]
+
+[tool.flake8]
+exclude = [".venv", "build"]
+max-line-length = 79
+
+[tool.black]
+line-length = 79
+target-version = ["py313"]
+
+[tool.isort]
+profile = "black"
+src_paths = ["dundie", "tests", "integration"]
+multi_line_output = 3  # Vertical Hanging Indent

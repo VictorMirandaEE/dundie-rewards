@@ -4,6 +4,8 @@ ipython
 ipdb
 pudb
 pytest-watch
+
+# Code quality
 flake8
 pyproject-flake8
 black
