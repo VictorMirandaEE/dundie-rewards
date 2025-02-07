@@ -1,0 +1,61 @@
+{
+    "employees": {
+        "jim@dundermifflin.com": {
+            "name": "Jim Halpert",
+            "department": "Sales",
+            "role": "Salesman"
+        },
+        "schrute@dundermifflin.com": {
+            "name": "Dwight Schrute",
+            "department": "Sales",
+            "role": "Manager"
+        },
+        "gabe@dundermifflin.com": {
+            "name": "Gabe Lewis",
+            "department": "Board of Directors",
+            "role": "Director"
+        }
+    },
+    "balance": {
+        "jim@dundermifflin.com": 500,
+        "schrute@dundermifflin.com": 100,
+        "gabe@dundermifflin.com": 100
+    },
+    "transactions": {
+        "jim@dundermifflin.com": [
+            {
+                "date": "2025-02-07T11:16:07.774555",
+                "points": 500,
+                "description": "Initial balance",
+                "actor": "system"
+            }
+        ],
+        "schrute@dundermifflin.com": [
+            {
+                "date": "2025-02-07T11:16:07.777352",
+                "points": 100,
+                "description": "Initial balance",
+                "actor": "system"
+            }
+        ],
+        "gabe@dundermifflin.com": [
+            {
+                "date": "2025-02-07T11:16:07.777824",
+                "points": 100,
+                "description": "Initial balance",
+                "actor": "system"
+            }
+        ]
+    },
+    "users": {
+        "jim@dundermifflin.com": {
+            "password": "Eu9tTGYU"
+        },
+        "schrute@dundermifflin.com": {
+            "password": "Sd3sGRh0"
+        },
+        "gabe@dundermifflin.com": {
+            "password": "jDptISCA"
+        }
+    }
+}

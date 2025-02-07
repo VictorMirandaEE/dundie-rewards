@@ -26,27 +26,41 @@ def test_load_positive_has_2_employees(request):
 @pytest.mark.high
 def test_load_positive_first_employee_name(request):
     """
-    Test that the first employee's name in the loaded employee file starts
-      with "Jim".
+    Test that the first employee's name in the loaded employee file is
+      "Jim Halpert".
     Args:
         request: A fixture that provides information about the test function.
     Asserts:
-        The first three characters of the first employee's name in the loaded
-          employee file are "Jim".
+        The first employee's name in the loaded employee file is "Jim Halpert".
     """
-    assert load(EMPLOYEES_FILE)[0][:3] == "Jim"
+    assert load(EMPLOYEES_FILE)[0]["name"] == "Jim Halpert"
 
 
 @pytest.mark.unit
 @pytest.mark.high
 def test_load_positive_second_employee_name(request):
     """
-    Test that the second employee's name in the loaded employee file starts
-      with "Dwight".
+    Test that the second employee's name in the loaded employee file is
+      "Dwight Schrute".
     Args:
         request: A fixture that provides information about the test function.
     Asserts:
-        The first 6 characters of the second employee's name in the loaded
-          employee file are "Dwight".
+        The second employee's name in the loaded employee file is
+          "Dwight Schrute".
     """
-    assert load(EMPLOYEES_FILE)[1][:6] == "Dwight"
+    assert load(EMPLOYEES_FILE)[1]["name"] == "Dwight Schrute"
+
+
+@pytest.mark.unit
+@pytest.mark.high
+def test_load_positive_third_employee_name(request):
+    """
+    Test that the third employee's name in the loaded employee file is
+      "Gabe Lewis".
+    Args:
+        request: A fixture that provides information about the test function.
+    Asserts:
+        The third employee's name in the loaded employee file is
+          "Gabe Lewis".
+    """
+    assert load(EMPLOYEES_FILE)[2]["name"] == "Gabe Lewis"
