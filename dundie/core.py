@@ -22,7 +22,7 @@ def load(filepath: str):
 
     Returns:
         list: A list of dictionaries, each containing employee data including
-          name, department, role, email, points, and creation status.
+          name, department, role, email, and creation status.
 
     Raises:
         FileNotFoundError: If the specified file does not exist.
@@ -43,7 +43,6 @@ def load(filepath: str):
 
                 return_data = employee_data.copy()
                 return_data["email"] = email
-                return_data["points"] = db["balance"][email]
                 return_data["created"] = created
                 employees.append(return_data)
 

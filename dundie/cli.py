@@ -23,15 +23,20 @@ def main():
     """Dunder Mifflin Rewards System
 
     This is a CLI tool for managing the Dunder Mifflin Rewards program.
+
+    ## Features
+
+    - Admins can load employees data to the database and assign points.
+    - Users can view their rewards points and transfer them to other employees.
     """
 
 
 @main.command()
 @click.argument("filepath", type=click.Path(exists=True), required=True)
 def load(filepath):
-    """Load employees data from a CSV file and display them.
+    """Load employees data from a CSV file to the database and display them.
 
-    \nFILEPATH is the path to the CSV file.
+    FILEPATH is the path to the CSV file.
 
     ## Features
 
@@ -40,7 +45,7 @@ def load(filepath):
     - Displays the data.
     """
     table = Table(title="Dunder Mifflin Employees")
-    headers = ["Name", "Department", "Role", "e-mail", "Points", "Created"]
+    headers = ["Name", "Department", "Role", "e-mail", "Created"]
     for header in headers:
         table.add_column(header, header_style="magenta", highlight=True)
 
@@ -68,11 +73,13 @@ def load(filepath):
     help="Output format (table or json)",
 )
 def show(**query):
-    """Show employees data
+    """Show employees data.
 
-    - Filter by email or department
-    - Output to console or file
-    - Output format as table or json
+    ## Features
+
+    - Filter by email or department.
+    - Output to console or file.
+    - Output format as table or JSON.
     """
     result = core.read(**query)
 
@@ -111,12 +118,15 @@ def show(**query):
 @click.option("--department", required=False, help="Filter by department")
 @click.pass_context
 def update(ctx, value, **query):
-    """Update the balance of reward points
+    """Update the balance of reward points.
 
-    VALUE is the number of points to add
-    \nPrefix '-- ' to a negative VALUE to subtract points
+    VALUE is the number of points to add.
 
-    - Filter by email or department
+    Prefix a negative VALUE with '-- ' to subtract points.
+
+    ## Features
+
+    - Filter by email or department.
     """
     core.update(value, **query)
     ctx.invoke(show, **query)
