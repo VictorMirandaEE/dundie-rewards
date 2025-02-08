@@ -16,12 +16,12 @@ ipython:
 
 
 test:
-	@.venv/bin/pytest -s
+	@.venv/bin/pytest -s --forked
 
 
 watch:
 	# @.venv/bin/ptw -- -vv -s
-	@ls **/*.py | entr pytest
+	@ls **/*.py | entr pytest --forked
 
 
 lint:

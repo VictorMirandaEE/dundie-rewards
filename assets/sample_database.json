@@ -1,0 +1,52 @@
+{
+    "employees": {
+        "john@doe.com": {
+            "name": "John Doe",
+            "role": "Sales Manager",
+            "department": "Sales",
+            "active": true
+        },
+        "jane@doe.com": {
+            "name": "Jane Doe",
+            "role": "Sales Representative",
+            "department": "Sales",
+            "active": true
+        }
+    },
+    "balance": {
+        "john@doe.com": {
+            "points": 100
+        },
+        "jane@doe.com": {
+            "points": 200
+        }
+    },
+    "transactions": {
+        "john@doe.com": [
+            {
+                "date": "2025-02-06",
+                "points": 100,
+                "description": "Initial points",
+                "actor": "system"
+            }
+        ],
+        "jane@doe.com": [
+            {
+                "date": "2025-02-06",
+                "points": 200,
+                "description": "Initial points",
+                "actor": "system"    
+            }
+        ]
+    },
+    "users": {
+        "john@doe.com": {
+            "password": "john123",
+            "is_admin": false
+        },
+        "jane@doe.com": {
+            "password": "jane123",
+            "is_admin": false
+        }
+    }
+}

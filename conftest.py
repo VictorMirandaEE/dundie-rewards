@@ -1,5 +1,7 @@
 """Main place to adjust pytest settings and creating global fixtures."""
 
+from unittest.mock import patch
+
 import pytest
 
 MARKER = """\
@@ -44,4 +46,26 @@ def go_to_tmpdir(request):
     """
     tmpdir = request.getfixturevalue("tmpdir")
     with tmpdir.as_cwd():
+        yield
+
+
+@pytest.fixture(autouse=True, scope="function")
+def setup_test_database(request):
+    """
+    Fixture to set up a temporary test database for testing purposes.
+
+    This fixture creates a temporary directory and a test database file within
+    it. It then patches the `DATABASE_PATH` in the `dundie.database` module to
+    point to this test database file.
+
+    Args:
+      request (FixtureRequest): The request object for the fixture, used to
+                    get other fixtures.
+
+    Yields:
+      None
+    """
+    tmpdir = request.getfixturevalue("tmpdir")
+    test_database = str(tmpdir.join("test_database.json"))
+    with patch("dundie.database.DATABASE_PATH", test_database):
         yield
