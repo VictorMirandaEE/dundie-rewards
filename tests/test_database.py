@@ -7,6 +7,7 @@ import pytest
 from dundie.database import (
     DATABASE_SCHEMA,
     add_employee,
+    add_transaction,
     commit,
     connect,
     set_initial_password,
@@ -208,17 +209,6 @@ def test_negative_add_employee_duplicated():
     5. Reconnect to the database and verify the employee's data remains as the
         initial data.
     6. Verify the employee's balance and transaction history remain unchanged.
-
-    Assertions:
-    - The employee's data matches the initial data after the first addition.
-    - The employee is marked as created after the first addition.
-    - The employee's data matches the updated data after the second addition.
-    - The employee is not marked as created after the second addition.
-    - The employee's data in the database matches the initial data after
-      reconnecting.
-    - The employee's balance matches the default associate points.
-    - The employee has only one transaction in their history.
-    - The transaction points match the default associate points.
     """
     db = connect()
     email = "existing_employee@example.com"
@@ -246,3 +236,90 @@ def test_negative_add_employee_duplicated():
     assert db["balance"][email] == DEFAULT_ASSOCIATE_POINTS
     assert len(db["transactions"][email]) == 1
     assert db["transactions"][email][0]["points"] == DEFAULT_ASSOCIATE_POINTS
+
+
+@pytest.mark.unit
+def test_positive_add_points():
+    """
+    Test the addition of points to an existing employee's balance.
+    This test performs the following steps:
+    1. Connects to the database and adds an existing employee.
+    2. Verifies that the employee is added correctly and commits the
+      transaction.
+    3. Reconnects to the database and adds points to the employee's balance.
+    4. Commits the transaction.
+    5. Reconnects to the database and verifies that the points were added
+      correctly.
+    6. Checks that the transaction details are correct.
+    """
+    db = connect()
+    email = "existing_employee@example.com"
+    initial_data = {
+        "name": "Existing Employee",
+        "role": "Developer",
+        "department": "Engineering",
+    }
+    employee, created = add_employee(db, email, initial_data)
+    assert employee == initial_data
+    assert created is True
+    commit(db)
+
+    db = connect()
+    points = 100
+    previous_balance = db["balance"][email]
+    add_transaction(db, email, points, "Bonus points", "manager")
+    commit(db)
+
+    db = connect()
+    assert db["balance"][email] == previous_balance + points
+    assert len(db["transactions"][email]) == 2
+    assert db["transactions"][email][1]["points"] == points
+    assert db["transactions"][email][1]["description"] == "Bonus points"
+    assert db["transactions"][email][1]["actor"] == "manager"
+
+
+@pytest.mark.unit
+def test_positive_remove_points():
+    """
+    Test the removal of points from an employee's balance.
+    This test verifies that points can be successfully removed from an existing
+    employee's balance and that the transaction is recorded correctly in th
+      database.
+    Steps:
+    1. Connect to the database.
+    2. Add an employee with initial data.
+    3. Verify that the employee is added and committed to the database.
+    4. Connect to the database again.
+    5. Remove points from the employee's balance due to a bad performance
+      review.
+    6. Commit the transaction to the database.
+    7. Connect to the database again.
+    8. Verify that the employee's balance is updated correctly.
+    9. Verify that the transaction is recorded with the correct details.
+    """
+    db = connect()
+    email = "existing_employee@example.com"
+    initial_data = {
+        "name": "Existing Employee",
+        "role": "Developer",
+        "department": "Engineering",
+    }
+    employee, created = add_employee(db, email, initial_data)
+    assert employee == initial_data
+    assert created is True
+    commit(db)
+
+    db = connect()
+    points = -100
+    previous_balance = db["balance"][email]
+    add_transaction(db, email, points, "Bad performance review", "manager")
+    commit(db)
+
+    db = connect()
+    assert db["balance"][email] == previous_balance + points
+    assert len(db["transactions"][email]) == 2
+    assert db["transactions"][email][1]["points"] == points
+    assert (
+        db["transactions"][email][1]["description"] == "Bad performance review"
+    )
+    assert db["transactions"][email][1]["actor"] == "manager"
