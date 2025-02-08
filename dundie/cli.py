@@ -68,9 +68,9 @@ def load(filepath):
 )
 @click.option(
     "--format",
-    type=click.Choice(["table", "json"], case_sensitive=False),
-    default="table",
-    help="Output format (table or json)",
+    type=click.Choice(["txt", "json"], case_sensitive=False),
+    default="txt",
+    help="Output format (txt or json)",
 )
 def show(**query):
     """Show employees data.
@@ -79,7 +79,7 @@ def show(**query):
 
     - Filter by email or department.
     - Output to console or file.
-    - Output format as table or JSON.
+    - Output format as TXT or JSON.
     """
     result = core.read(**query)
 

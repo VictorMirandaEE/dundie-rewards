@@ -103,11 +103,11 @@ def test_positive_show_filter_department(runner):
     assert "Sales" in result.output
 
 
-def test_positive_show_format_table(runner):
+def test_positive_show_format_txt(runner):
     """
-    Test the 'show' command with table format.
+    Test the 'show' command with TXT format.
     This test ensures that the 'show' command, when invoked with the
-    '--format table' option, produces the expected output in table format. It
+    '--format txt' option, produces the expected output in TXT format. It
     first loads the employee data using the 'load' command and then checks the
     following:
     - The command exits with a status code of 0.
@@ -116,7 +116,7 @@ def test_positive_show_format_table(runner):
     """
 
     runner.invoke(load, EMPLOYEES_FILE)
-    result = runner.invoke(main, ["show", "--format", "table"])
+    result = runner.invoke(main, ["show", "--format", "txt"])
     assert result.exit_code == 0
     assert "Dunder Mifflin Rewards Report" in result.output
     assert "Email" in result.output
@@ -148,11 +148,11 @@ def test_positive_show_format_json(runner):
     assert "department" in content[0]
 
 
-def test_positive_show_output_to_file_format_table(runner, tmp_path):
+def test_positive_show_output_to_file_format_txt(runner, tmp_path):
     """
-    Test the 'show' command with output to a file in table format.
+    Test the 'show' command with output to a file in TXT format.
     This test ensures that the 'show' command generates the correct output
-    when the results are written to a file in table format. It verifies that
+    when the results are written to a file in TXT format. It verifies that
     the command executes successfully and that the output file contains the
     expected headers and content.
     Args:
@@ -168,7 +168,7 @@ def test_positive_show_output_to_file_format_table(runner, tmp_path):
     runner.invoke(load, EMPLOYEES_FILE)
     file_path = tmp_path / "output.txt"
     result = runner.invoke(
-        main, ["show", "--file", file_path, "--format", "table"]
+        main, ["show", "--file", file_path, "--format", "txt"]
     )
     assert result.exit_code == 0
     with open(file_path) as f:
