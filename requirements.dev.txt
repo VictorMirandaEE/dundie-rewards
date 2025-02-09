@@ -14,5 +14,8 @@ isort
 pep8-naming
 mypy
 
+# Documentation
+mkdocs
+
 # Install project as editable
 -e .

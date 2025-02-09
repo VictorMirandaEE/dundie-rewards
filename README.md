@@ -12,21 +12,16 @@ We agreed in the contract that the MVP (Minimum Viable Product) would be a versi
 
 Current employee data will be provided in a file in CSV or JSON formats, which can be used for future versions: `Name, Department, Position, Email`
 
-
 ## Installation
 
-```py
-pip install yourname-dundie
-```
-
-```py
-pip install -e '.[dev]'
-```
+Refer to the [Installation Guide](docs/install.md)
 
 ## Usage
 
-```py
-dundie --help
-```
+Refer to the [User Guide](docs/usage.md)
 
-![](./assets/dunder-mifflin-logo.png)
+## Contribute
+
+Refer to the [Contributing Guide](docs/contributing.md)
+
+![](docs/img/dunder-mifflin-logo.png)
