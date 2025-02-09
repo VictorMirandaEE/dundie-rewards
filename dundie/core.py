@@ -1,4 +1,4 @@
-"""Core module of dundie
+"""Core module of dundie.
 
 This module contains the business logic for the Dundie application.
 """
@@ -14,8 +14,8 @@ log = get_logger()
 
 def load(filepath: str):
     """
-    Load employee data from a CSV file, add employees to the database, and
-      return a list of employee records.
+    Load employee data from a CSV file, add employees to the database, and\
+    return a list of employee records.
 
     Args:
         filepath (str): The path to the CSV file containing employee data.
@@ -56,8 +56,8 @@ def load(filepath: str):
 
 def read(**query):
     """
-    Reads and filters employee data from the database based on the provided
-      query parameters.
+    Read and filter employee data from the database based on the provided\
+    query parameters.
 
     Keyword Args:
         email (str, optional): Filter by employee email.
@@ -93,8 +93,8 @@ def read(**query):
 
 def update(value: int, **query):
     """
-    Update the balance of employees based on the given value and query
-      parameters.
+    Update the balance of employees based on the given value and query\
+    parameters.
 
     Args:
         value (int): The amount to update the balance by.

@@ -16,6 +16,7 @@ low: Low priority
 def pytest_configure(config):
     """
     Configure pytest settings.
+
     This function is called to configure pytest settings before running tests.
     It reads marker definitions from the MARKER variable and adds them to
       the pytest configuration.
@@ -28,8 +29,8 @@ def pytest_configure(config):
 @pytest.fixture(autouse=True)
 def go_to_tmpdir(request):
     """
-    Fixture to change the current working directory to a temporary directory
-      for the duration of a test.
+    Fixture to change the current working directory to a temporary directory\
+    for the duration of a test.
 
     This fixture uses the `tmpdir` fixture provided by pytest to create
       a temporary directory.

@@ -1,3 +1,5 @@
+"""Database module of dundie."""
+
 import json
 from datetime import datetime
 
@@ -20,7 +22,7 @@ DATABASE_SCHEMA = {
 
 def connect() -> dict:
     """
-    Connects to the database and returns its contents as a dictionary.
+    Connect to the database and returns its contents as a dictionary.
 
     This function attempts to open and read the database file specified by
     the DATABASE_PATH variable. If the file is successfully read and its
@@ -42,7 +44,7 @@ def connect() -> dict:
 
 def commit(database: dict) -> None:
     """
-    Commits the given database dictionary to a file.
+    Commit the given database dictionary to a file.
 
     This function checks if the provided database dictionary matches the
     expected database schema. If the schema is valid, it writes the database
@@ -111,7 +113,7 @@ def add_employee(database: dict, email: str, data: dict) -> tuple:
 
 def set_initial_balance(database: dict, email: str, employee: dict) -> None:
     """
-    Sets the initial balance for an employee in the database.
+    Set the initial balance for an employee in the database.
 
     Args:
         database (dict): The database where the employee's balance is stored.
@@ -139,8 +141,9 @@ def add_transaction(
     actor: str = "system",
 ) -> None:
     """
-    Add a transaction to the database for a given user and update their
-      balance.
+    Add a transaction to the database for a given user and update their\
+    balance.
+
     Args:
         database (dict): The database containing transactions and balances.
         email (str): The email of the user to add the transaction for.
@@ -168,6 +171,7 @@ def add_transaction(
 def set_initial_password(database: dict, email: str) -> str:
     """
     Set the initial password for an employee in the database.
+
     Args:
         database (dict): The database where the employee's password is stored.
         email (str): The email of the employee.

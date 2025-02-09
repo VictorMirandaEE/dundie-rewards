@@ -1,4 +1,4 @@
-"""dundie utils unit test"""
+"""dundie utils unit test."""
 
 import pytest
 
@@ -24,8 +24,9 @@ from dundie.utils.user import generate_simple_password
 )
 def test_positive_check_valid_email(valid_email):
     """
-    Test that the check_valid_email function correctly identifies a valid email
-      address.
+    Test that the check_valid_email function correctly identifies a valid\
+    email address.
+
     Asserts:
         The check_valid_email function returns True for a valid email address.
     """
@@ -51,8 +52,9 @@ def test_positive_check_valid_email(valid_email):
 )
 def test_negative_check_valid_email(invalid_email):
     """
-    Test that the check_valid_email function correctly identifies an invalid
-      email address.
+    Test that the check_valid_email function correctly identifies an invalid\
+    email address.
+
     Asserts:
       The check_valid_email function returns False for an invalid email
         address.
@@ -63,8 +65,9 @@ def test_negative_check_valid_email(invalid_email):
 @pytest.mark.unit
 def test_positive_generate_simple_password():
     """
-    Test that the generate_simple_password function generates a password of the
-      correct length.
+    Test that the generate_simple_password function generates a password of\
+    the correct length.
+
     Asserts:
         The generated password is of the correct length.
     """

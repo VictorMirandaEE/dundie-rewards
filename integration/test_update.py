@@ -1,4 +1,4 @@
-"""dundie update subcommand integration test"""
+"""dundie update subcommand integration test."""
 
 import pytest
 from click.testing import CliRunner
@@ -9,6 +9,12 @@ from integration.constants import EMPLOYEES_FILE
 
 @pytest.fixture
 def runner():
+    """
+    Create and return a new instance of CliRunner.
+
+    Returns:
+        CliRunner: An instance of the CliRunner class.
+    """
     return CliRunner()
 
 
@@ -26,7 +32,6 @@ def test_positive_update_add_points_all_employees(runner):
     Args:
         runner: The test runner instance used to invoke commands.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
 
     result = runner.invoke(update, "10")
@@ -50,7 +55,6 @@ def test_positive_update_subtract_points_all_employees(runner):
     Args:
         runner: The test runner instance used to invoke commands.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
 
     result = runner.invoke(update, "-- -10")
@@ -76,7 +80,6 @@ def test_positive_update_add_points_filter_email(runner):
     Args:
         runner: The CliRunner instance used to invoke commands.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
 
     email = "jim@dundermifflin.com"
@@ -104,7 +107,6 @@ def test_positive_update_subtract_points_filter_email(runner):
     Args:
         runner: The CliRunner instance used to invoke commands.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
 
     email = "jim@dundermifflin.com"
@@ -131,7 +133,6 @@ def test_positive_update_add_points_filter_department(runner):
     Args:
         runner (CliRunner): The CLI runner used to invoke commands.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
 
     department = "Sales"
@@ -145,8 +146,8 @@ def test_positive_update_add_points_filter_department(runner):
 
 def test_positive_update_subtract_points_filter_department(runner):
     """
-    Test the update command to subtract points from employees filtered by
-      department.
+    Test the update command to subtract points from employees filtered by\
+    department.
 
     This test performs the following steps:
     1. Loads the employee data from the EMPLOYEES_FILE.
@@ -160,7 +161,6 @@ def test_positive_update_subtract_points_filter_department(runner):
     Args:
         runner (CliRunner): The CLI runner used to invoke commands.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
 
     department = "Sales"
