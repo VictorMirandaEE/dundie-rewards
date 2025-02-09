@@ -6,7 +6,9 @@ from setuptools import find_packages, setup
 
 
 def read(*paths):
-    """Safely read file contents
+    """
+    Safely read file contents.
+
     >>> read("project_name", "VERSION")
     '0.1.0'
     >>> read("README.md")
@@ -19,7 +21,8 @@ def read(*paths):
 
 
 def read_requirements(path: str):
-    """Return a list of requirements from a text file.
+    """
+    Return a list of requirements from a text file.
 
     Args:
         path (str): path to the requirements text file.

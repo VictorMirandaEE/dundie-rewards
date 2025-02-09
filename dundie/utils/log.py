@@ -1,4 +1,4 @@
-"""Logging module for dundie"""
+"""Logging module for dundie."""
 
 import logging
 import os
@@ -18,7 +18,8 @@ fmt = logging.Formatter(
 
 
 def get_logger(logfile="dundie.log"):
-    """Returns a configured logger.
+    """
+    Return a configured logger.
 
     Args:
         logfile (str, optional): _description_. Defaults to "dundie.log".

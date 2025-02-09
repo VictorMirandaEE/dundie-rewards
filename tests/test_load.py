@@ -1,4 +1,4 @@
-"""dundie load subcommand unit test"""
+"""dundie load subcommand unit test."""
 
 import pytest
 
@@ -11,8 +11,9 @@ from .constants import EMPLOYEES_FILE
 @pytest.mark.high
 def test_load_positive_has_2_employees(request):
     """
-    Test that the load function correctly loads and returns 2 employees from
-      the EMPLOYEES_FILE.
+    Test that the load function correctly loads and returns 2 employees from\
+    the EMPLOYEES_FILE.
+
     Args:
         request: A pytest fixture that provides information about the test
           execution.
@@ -26,8 +27,9 @@ def test_load_positive_has_2_employees(request):
 @pytest.mark.high
 def test_load_positive_first_employee_name(request):
     """
-    Test that the first employee's name in the loaded employee file is
-      "Jim Halpert".
+    Test that the first employee's name in the loaded employee file is\
+    "Jim Halpert".
+
     Args:
         request: A fixture that provides information about the test function.
     Asserts:
@@ -40,8 +42,9 @@ def test_load_positive_first_employee_name(request):
 @pytest.mark.high
 def test_load_positive_second_employee_name(request):
     """
-    Test that the second employee's name in the loaded employee file is
-      "Dwight Schrute".
+    Test that the second employee's name in the loaded employee file is\
+    "Dwight Schrute".
+
     Args:
         request: A fixture that provides information about the test function.
     Asserts:
@@ -55,8 +58,9 @@ def test_load_positive_second_employee_name(request):
 @pytest.mark.high
 def test_load_positive_third_employee_name(request):
     """
-    Test that the third employee's name in the loaded employee file is
-      "Gabe Lewis".
+    Test that the third employee's name in the loaded employee file is\
+    "Gabe Lewis".
+
     Args:
         request: A fixture that provides information about the test function.
     Asserts:

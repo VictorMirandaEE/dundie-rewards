@@ -1,4 +1,4 @@
-"""dundie load subcommand integration test"""
+"""dundie load subcommand integration test."""
 
 import pytest
 from click.testing import CliRunner
@@ -10,6 +10,12 @@ from .constants import EMPLOYEES_FILE
 
 @pytest.fixture
 def runner():
+    """
+    Create and return a new instance of CliRunner.
+
+    Returns:
+        CliRunner: An instance of the CliRunner class.
+    """
     return CliRunner()
 
 
@@ -18,6 +24,7 @@ def runner():
 def test_positive_load_command(runner):
     """
     Test the 'load' command with a positive scenario.
+
     This test uses the 'runner' fixture to invoke the 'load' command with the
     EMPLOYEES_FILE argument. It verifies that the command exits with a status
     code of 0 and that the output contains the expected table headers.
@@ -25,7 +32,6 @@ def test_positive_load_command(runner):
         runner (CliRunner): A Click CliRunner instance used to invoke CLI
           commands.
     """
-
     result = runner.invoke(load, EMPLOYEES_FILE)
 
     # Check that the command exits with a status code of 0
@@ -40,14 +46,13 @@ def test_positive_load_command(runner):
 @pytest.mark.parametrize("wrong_command", ["open", "start", "init"])
 def test_negative_wrong_command(runner, wrong_command):
     """
-    Test that invoking the main function with a wrong command results in an
-      error.
+    Test that invoking the main function with a wrong command results in an\
+    error.
 
     Args:
         runner (CliRunner): The Click CLI runner used to invoke commands.
         wrong_command (str): The incorrect command to test.
     """
-
     output = runner.invoke(main, [wrong_command, EMPLOYEES_FILE])
 
     assert output.exit_code != 0

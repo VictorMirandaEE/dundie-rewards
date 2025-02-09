@@ -1,4 +1,4 @@
-"""CLI (Command Line Interface) module of dundie"""
+"""CLI (Command Line Interface) module of dundie."""
 
 import importlib.metadata
 import json
@@ -20,7 +20,7 @@ click.rich_click.APPEND_METAVARS_HELP = True
 @click.group()
 @click.version_option(importlib.metadata.version("dundie"))
 def main():
-    """Dunder Mifflin Rewards System
+    """Dunder Mifflin Rewards System.
 
     This is a CLI tool for managing the Dunder Mifflin Rewards program.
 

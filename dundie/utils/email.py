@@ -1,4 +1,4 @@
-"""Email module for dundie"""
+"""Email module for dundie."""
 
 import re
 import smtplib
@@ -32,7 +32,7 @@ def check_valid_email(address: str) -> bool:
 
 def send_email(sender: str, recipient: list, subject: str, body: str) -> None:
     """
-    Sends an email using the specified parameters.
+    Send an email using the specified parameters.
 
     Args:
         sender (str): The email address of the sender.

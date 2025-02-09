@@ -1,4 +1,4 @@
-"""dundie update subcommand unit test"""
+"""dundie update subcommand unit test."""
 
 import pytest
 

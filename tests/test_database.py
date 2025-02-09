@@ -1,4 +1,4 @@
-"""dundie database unit test"""
+"""dundie database unit test."""
 
 from unittest.mock import patch
 
@@ -242,6 +242,7 @@ def test_negative_add_employee_duplicated():
 def test_positive_add_points():
     """
     Test the addition of points to an existing employee's balance.
+
     This test performs the following steps:
     1. Connects to the database and adds an existing employee.
     2. Verifies that the employee is added correctly and commits the
@@ -282,6 +283,7 @@ def test_positive_add_points():
 def test_positive_remove_points():
     """
     Test the removal of points from an employee's balance.
+
     This test verifies that points can be successfully removed from an existing
     employee's balance and that the transaction is recorded correctly in th
       database.

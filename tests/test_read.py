@@ -1,4 +1,4 @@
-"""dundie read function unit test"""
+"""dundie read function unit test."""
 
 from dundie.core import read
 from dundie.database import add_employee, commit, connect

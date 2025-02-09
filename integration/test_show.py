@@ -1,4 +1,4 @@
-"""dundie show subcommand integration test"""
+"""dundie show subcommand integration test."""
 
 import json
 
@@ -12,6 +12,12 @@ from .constants import EMPLOYEES_FILE
 
 @pytest.fixture
 def runner():
+    """
+    Create and return a new instance of CliRunner.
+
+    Returns:
+        CliRunner: An instance of the CliRunner class.
+    """
     return CliRunner()
 
 
@@ -28,7 +34,6 @@ def test_positive_show_with_no_results(runner):
     Args:
         runner: A CliRunner instance used to invoke the command.
     """
-
     result = runner.invoke(show)
 
     # Check that the command exits with a status code of 0
@@ -43,6 +48,7 @@ def test_positive_show_with_no_results(runner):
 def test_positive_show_without_option(runner):
     """
     Test the 'show' command without any options.
+
     This test ensures that the 'show' command can be called successfully
       without any additional options.
     It verifies that the command exits with a status code of 0 and that the
@@ -55,7 +61,6 @@ def test_positive_show_without_option(runner):
         3. Assert that the command exits with a status code of 0.
         4. Assert that the output contains the expected table headers.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
 
     result = runner.invoke(show)
@@ -70,6 +75,7 @@ def test_positive_show_without_option(runner):
 def test_positive_show_filter_email(runner):
     """
     Test the 'show' command with an email filter.
+
     This test ensures that the 'show' command correctly filters results
     based on the provided email address. It first loads the employee data
     using the 'load' command, then invokes the 'show' command with the
@@ -78,7 +84,6 @@ def test_positive_show_filter_email(runner):
     Args:
         runner: A CliRunner instance used to invoke CLI commands.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
     result = runner.invoke(main, ["show", "--email", "jim@dundermifflin.com"])
     assert result.exit_code == 0
@@ -88,6 +93,7 @@ def test_positive_show_filter_email(runner):
 def test_positive_show_filter_department(runner):
     """
     Test the 'show' command with a department filter.
+
     This test ensures that the 'show' command correctly filters employees
     by the specified department. It first loads the employee data from the
     EMPLOYEES_FILE and then invokes the 'show' command with the '--department'
@@ -96,7 +102,6 @@ def test_positive_show_filter_department(runner):
     Args:
         runner: A Click testing runner instance used to invoke commands.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
     result = runner.invoke(main, ["show", "--department", "Sales"])
     assert result.exit_code == 0
@@ -106,6 +111,7 @@ def test_positive_show_filter_department(runner):
 def test_positive_show_format_txt(runner):
     """
     Test the 'show' command with TXT format.
+
     This test ensures that the 'show' command, when invoked with the
     '--format txt' option, produces the expected output in TXT format. It
     first loads the employee data using the 'load' command and then checks the
@@ -114,7 +120,6 @@ def test_positive_show_format_txt(runner):
     - The output contains the header "Dunder Mifflin Rewards Report".
     - The output includes the columns "Email" and "Department".
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
     result = runner.invoke(main, ["show", "--format", "txt"])
     assert result.exit_code == 0
@@ -126,6 +131,7 @@ def test_positive_show_format_txt(runner):
 def test_positive_show_format_json(runner):
     """
     Test the 'show' command with JSON format.
+
     This test ensures that the 'show' command outputs the correct JSON format
     when invoked. It first loads the employee data using the 'load' command,
     then invokes the 'show' command with the '--format json' option. The test
@@ -137,7 +143,6 @@ def test_positive_show_format_json(runner):
     Raises:
         AssertionError: If any of the assertions fail.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
     result = runner.invoke(main, ["show", "--format", "json"])
     assert result.exit_code == 0
@@ -151,6 +156,7 @@ def test_positive_show_format_json(runner):
 def test_positive_show_output_to_file_format_txt(runner, tmp_path):
     """
     Test the 'show' command with output to a file in TXT format.
+
     This test ensures that the 'show' command generates the correct output
     when the results are written to a file in TXT format. It verifies that
     the command executes successfully and that the output file contains the
@@ -164,7 +170,6 @@ def test_positive_show_output_to_file_format_txt(runner, tmp_path):
         - The output file contains the "Email" header.
         - The output file contains the "Department" header.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
     file_path = tmp_path / "output.txt"
     result = runner.invoke(
@@ -181,6 +186,7 @@ def test_positive_show_output_to_file_format_txt(runner, tmp_path):
 def test_positive_show_output_to_file_format_json(runner, tmp_path):
     """
     Test the 'show' command with JSON output format.
+
     This test ensures that the 'show' command correctly outputs data to a file
     in JSON format. It performs the following steps:
     1. Invokes the 'load' command to load employee data.
@@ -192,7 +198,6 @@ def test_positive_show_output_to_file_format_json(runner, tmp_path):
         - The list is not empty.
         - Each item in the list contains 'email' and 'department' keys.
     """
-
     runner.invoke(load, EMPLOYEES_FILE)
     file_path = tmp_path / "output.json"
     result = runner.invoke(
