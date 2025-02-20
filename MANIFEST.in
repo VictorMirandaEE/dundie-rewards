@@ -1,0 +1,2 @@
+include tests/assets/*.csv
+include requirements*.txt

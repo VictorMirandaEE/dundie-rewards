@@ -1,7 +1,9 @@
 """Database module of dundie."""
 
 import json
+import os
 from datetime import datetime
+from typing import Any, Dict
 
 from dundie.settings import (
     DATABASE_PATH,
@@ -12,7 +14,7 @@ from dundie.settings import (
 from dundie.utils.email import check_valid_email, send_email
 from dundie.utils.user import generate_simple_password
 
-DATABASE_SCHEMA = {
+DATABASE_SCHEMA: Dict[str, Dict[str, Any]] = {
     "employees": {},
     "balance": {},
     "transactions": {},
@@ -61,6 +63,7 @@ def commit(database: dict) -> None:
     if database.keys() != DATABASE_SCHEMA.keys():
         raise RuntimeError("Invalid database schema")
     try:
+        os.makedirs(os.path.dirname(DATABASE_PATH), exist_ok=True)
         with open(DATABASE_PATH, "w") as database_file:
             database_file.write(json.dumps(database, indent=4))
     except Exception as error:

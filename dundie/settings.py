@@ -23,10 +23,12 @@ SMTP_TIMEOUT = 5
 SMTP_USERNAME = "username"
 SMTP_PASSWORD = "password"
 
-ROOT_PATH = os.path.dirname(__file__)
-DATABASE_PATH = os.path.join(ROOT_PATH, "..", "assets", "database.json")
+CURRENT_PATH = os.curdir
+DATABASE_PATH = os.path.join(CURRENT_PATH, "assets", "database.json")
 
 EMAIL_FROM = "admin@dundie.com"
 
 DEFAULT_MANAGER_POINTS = 100
 DEFAULT_ASSOCIATE_POINTS = 500
+
+PROJECT_NAME = "dundie-victor"

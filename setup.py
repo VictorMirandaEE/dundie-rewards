@@ -4,6 +4,8 @@ import os
 
 from setuptools import find_packages, setup
 
+from dundie.settings import PROJECT_NAME
+
 
 def read(*paths):
     """
@@ -35,15 +37,19 @@ def read_requirements(path: str):
 
 
 setup(
-    name="dundie",
-    version="0.1.0",
+    name=PROJECT_NAME,
+    # version format is X.Y.Z (Major.Minor.Patch) - https://semver.org/
+    version="0.1.6",
     description="Dunder Mifflin Rewards System",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     author="Victor Miranda",
-    python_requires=">=3.13",
+    python_requires=">=3.10",
     url="https://github.com/VictorMirandaEE/dundie-rewards",
-    packages=find_packages(),
+    # A Python package is any folder containing __init__.py
+    packages=find_packages(exclude=["integration"]),
+    # Include files from MANIFEST.in
+    include_package_data=True,
     entry_points={"console_scripts": ["dundie = dundie.__main__:main"]},
     install_requires=read_requirements("requirements.txt"),
     extras_require={
