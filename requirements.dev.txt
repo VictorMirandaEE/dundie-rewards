@@ -17,5 +17,9 @@ mypy
 # Documentation
 mkdocs
 
+# Build
+build
+twine
+
 # Install project as editable
 -e .

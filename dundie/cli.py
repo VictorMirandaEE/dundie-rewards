@@ -8,6 +8,7 @@ from rich.console import Console
 from rich.table import Table
 
 from dundie import core
+from dundie.settings import PROJECT_NAME
 
 click.rich_click.USE_RICH_MARKUP = True
 click.rich_click.USE_MARKDOWN = True
@@ -18,7 +19,7 @@ click.rich_click.APPEND_METAVARS_HELP = True
 
 
 @click.group()
-@click.version_option(importlib.metadata.version("dundie"))
+@click.version_option(importlib.metadata.version(PROJECT_NAME))
 def main():
     """Dunder Mifflin Rewards System.
 
