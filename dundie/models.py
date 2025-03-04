@@ -54,7 +54,7 @@ class Users(BaseModel):
 
 
 if __name__ == "__main__":
-    """Run this script to test the models."""
+    """Run this script to test it standalone."""
     employee = Employees(
         email="victor@email.com",
         name="Victor",
