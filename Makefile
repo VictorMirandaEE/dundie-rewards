@@ -31,6 +31,7 @@ watch:
 
 # Lint code using flake8.
 lint:
+	@.venv/bin/mypy --ignore-missing-imports --show-error-codes dundie
 	@.venv/bin/pflake8
 
 
