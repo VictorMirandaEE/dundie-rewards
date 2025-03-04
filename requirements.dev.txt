@@ -12,7 +12,6 @@ pyproject-flake8
 black
 isort
 pep8-naming
-mypy
 
 # Documentation
 mkdocs
