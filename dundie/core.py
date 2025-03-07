@@ -4,15 +4,76 @@ This module contains the business logic for the Dundie application.
 """
 
 import os
-from csv import reader
+from csv import DictReader
+from csv import Error as CSVError
+from decimal import Decimal
+from typing import Any, Dict, List
 
-from dundie.database import add_employee, add_transaction, commit, connect
+from pydantic import ValidationError
+from sqlmodel import select
+
+from dundie.database import get_session
+from dundie.models import Employee
+from dundie.settings import DATE_FORMAT
+from dundie.utils.db import add_employee, add_transaction
 from dundie.utils.log import get_logger
 
-log = get_logger()
+Query = Dict[str, Any]
+ResultDict = List[Dict[str, Any]]
 
 
-def load(filepath: str):
+def loc_to_dot_sep(loc: tuple[str | int, ...]) -> str:
+    """
+    Convert a tuple of strings and integers to a dot-separated string.
+
+    Args:
+        loc (tuple[str | int, ...]): A tuple containing strings and integers.
+
+    Returns:
+        str: A string where each string element in the tuple is separated by a
+             dot, and each integer element is enclosed in square brackets.
+
+    Raises:
+        TypeError: If an element in the tuple is neither a string nor an
+          integer.
+
+    Example:
+        >>> loc_to_dot_sep(('a', 'b', 1, 'c', 2))
+        'a.b[1].c[2]'
+    """
+    path = ""
+    for i, x in enumerate(loc):
+        if isinstance(x, str):
+            if i > 0:
+                path += "."
+            path += x
+        elif isinstance(x, int):
+            path += f"[{x}]"
+        else:
+            raise TypeError("Unexpected type")
+    return path
+
+
+def convert_errors(e: ValidationError) -> list[dict[str, Any]]:
+    """
+    Convert Pydantic validation errors to a list of dictionaries.
+
+    Args:
+        e (ValidationError): The Pydantic ValidationError instance containing
+          the errors.
+
+    Returns:
+        list[dict[str, Any]]: A list of dictionaries where each dictionary
+            represents an error. The 'loc' key in each dictionary is converted
+            to a dot-separated string.
+    """
+    new_errors: list[dict[str, Any]] = e.errors()  # type: ignore
+    for error in new_errors:
+        error["loc"] = loc_to_dot_sep(error["loc"])
+    return new_errors
+
+
+def load(filepath: str) -> ResultDict:
     """
     Load employee data from a CSV file, add employees to the database, and\
     return a list of employee records.
@@ -21,40 +82,58 @@ def load(filepath: str):
         filepath (str): The path to the CSV file containing employee data.
 
     Returns:
-        list: A list of dictionaries, each containing employee data including
-          name, department, role, email, and creation status.
+        list[dict[str, Any]]: A list of dictionaries, each containing employee
+          data including name, department, role, email, and creation status.
 
     Raises:
         FileNotFoundError: If the specified file does not exist.
-
+        CSVError: If there is an error reading the CSV file.
+        ValidationError: If there is an error validating the employee data.
     """
-    try:
-        with open(filepath) as file:
-            csv_data = reader(file)
-            db = connect()
-            employees = []
-            headers = ["name", "department", "role", "email"]
-            for row in csv_data:
-                employee_data = dict(
-                    zip(headers, [item.strip() for item in row])
-                )
-                email = employee_data.pop("email")
-                employee_data, created = add_employee(db, email, employee_data)
+    employees = []
 
+    log = get_logger()
+
+    try:
+        csv_data = DictReader(
+            open(filepath), strict=True, dialect="unix", skipinitialspace=True
+        )
+
+        csv_data_list = list(csv_data)
+
+        if not csv_data_list:
+            log.error(f"Empty CSV file provided {filepath!r}")
+            return []
+
+        with get_session() as session:
+            for employee_data in csv_data_list:
+                employee = Employee(**employee_data)
+                _, created = add_employee(session, employee)
                 return_data = employee_data.copy()
-                return_data["email"] = email
                 return_data["created"] = created
                 employees.append(return_data)
 
-            commit(db)
-            return employees
+            session.commit()
 
-    except FileNotFoundError as error_msg:
-        log.error(str(error_msg))
-        raise error_msg
+    except FileNotFoundError as exception_msg:
+        log.error(f"FileNotFoundError: {exception_msg}")
+        pass
+    except CSVError as exception_msg:
+        log.error(f"CSVError: {exception_msg}")
+        pass
+    except ValidationError as error:
+        pretty_errors = convert_errors(error)
+        error_msg = f"""\
+Employee {employee_data!r} has an invalid email {pretty_errors[0]["input"]!r}:\
+ [ValidationError] {pretty_errors[0]["ctx"]["reason"]}
+"""
+        log.error(error_msg)
+        pass
+
+    return employees
 
 
-def read(**query):
+def read(**query: Query) -> ResultDict:
     """
     Read and filter employee data from the database based on the provided\
     query parameters.
@@ -64,40 +143,48 @@ def read(**query):
         department (str, optional): Filter by employee department.
 
     Returns:
-        list: A list of dictionaries containing employee data, including email,
-          balance, last transaction date, and other employee details.
+        list[dict[str, Any]]: A list of dictionaries containing employee data,
+            including name, email, role, department, balance, and last
+            transaction date.
     """
-    db = connect()
     return_data = []
 
-    for email, data in db["employees"].items():
-        if query.get("email") and query["email"] != email:
-            continue
-        if (
-            query.get("department")
-            and query["department"] != data["department"]
-        ):
-            continue
+    sql_statement = []
+    if query.get("department"):
+        sql_statement.append(Employee.department == query["department"])
+    if query.get("email"):
+        sql_statement.append(Employee.email == query["email"])
 
-        return_data.append(
-            {
-                "email": email,
-                "balance": db["balance"].get(email, 0),
-                "last_transaction": db["transactions"][email][-1]["date"],
-                **data,
-            }
-        )
+    sql = select(Employee)
+    if sql_statement:
+        sql = sql.where(*sql_statement)
+
+    with get_session() as session:
+        results = session.exec(sql)
+        for employee in results:
+            return_data.append(
+                {
+                    "name": employee.name,
+                    "email": employee.email,
+                    "role": employee.role,
+                    "department": employee.department,
+                    "balance": employee.balance[0].value,
+                    "last_transaction": employee.transaction[-1].date.strftime(
+                        DATE_FORMAT
+                    ),
+                }
+            )
 
     return return_data
 
 
-def update(value: int, **query):
+def update(value: Decimal, **query: Query) -> None:
     """
     Update the balance of employees based on the given value and query\
     parameters.
 
     Args:
-        value (int): The amount to update the balance by.
+        value (Decimal): The amount to update the balance by.
         **query: Arbitrary keyword arguments used to filter employees.
 
     Raises:
@@ -106,26 +193,27 @@ def update(value: int, **query):
     Environment Variables:
         USER: The username of the person performing the update. Defaults to
           "system" if not set.
-
-    The function performs the following steps:
-        1. Reads employees based on the query parameters.
-        2. Raises an error if no employees are found.
-        3. Connects to the database.
-        4. Updates the balance for each employee.
-        5. Adds a transaction record for the update.
-        6. Commits the changes to the database.
     """
     employees = read(**query)
+
+    log = get_logger()
 
     if not employees:
         raise RuntimeError("No employees found")
 
-    db = connect()
-    user = os.getenv("USER", "system")
-    for employee in employees:
-        email = employee["email"]
-        new_balance = db["balance"].get(email, 0) + value
-        db["balance"][email] = new_balance
-        add_transaction(db, email, value, user, "Updated points")
+    with get_session() as session:
+        user = os.getenv("USER", "system")
+        for employee in employees:
+            email = employee["email"]
+            instance = session.exec(
+                select(Employee).where(Employee.email == email)
+            ).first()
+            if instance:
+                # instance.balance.value += value
+                add_transaction(
+                    session, instance, value, "Updated points", user
+                )
+            else:
+                log.error(f"Employee {email!r} not found in the database")
 
-    commit(db)
+        session.commit()

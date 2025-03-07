@@ -1,3 +1,4 @@
-Jim Halpert, Sales, Salesman, jim@dundermifflin.com
-Dwight Schrute, Sales, Sales Manager, schrute@dundermifflin.com
-Gabe Lewis, Board of Directors, Director, gabe@dundermifflin.com
+name, email, role, department
+Jim Halpert, jim@dundermifflin.com, Salesman, Sales
+Dwight Schrute, schrute@dundermifflin.com, Sales Manager, Sales
+Gabe Lewis, gabe@dundermifflin.com, Director, Board of Directors

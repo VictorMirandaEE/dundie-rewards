@@ -1,8 +1,12 @@
 """Main place to adjust pytest settings and creating global fixtures."""
 
-from unittest.mock import patch
-
 import pytest
+from sqlmodel import create_engine
+
+import dundie.utils.log as log
+from dundie import models
+from dundie.settings import log_file
+from tests.constants import TEST_DATABASE_FILE, TEST_LOG_FILE
 
 MARKER = """\
 unit: Mark unit test
@@ -27,7 +31,7 @@ def pytest_configure(config):
 
 
 @pytest.fixture(autouse=True)
-def go_to_tmpdir(request):
+def _go_to_tmpdir(request):
     """
     Fixture to change the current working directory to a temporary directory\
     for the duration of a test.
@@ -50,23 +54,55 @@ def go_to_tmpdir(request):
         yield
 
 
-@pytest.fixture(autouse=True, scope="function")
-def setup_test_database(request):
+@pytest.fixture(autouse=True)
+def _setup_test_database(request, monkeypatch):
     """
     Fixture to set up a temporary test database for testing purposes.
 
     This fixture creates a temporary directory and a test database file within
-    it. It then patches the `DATABASE_PATH` in the `dundie.database` module to
+    it. It then patches the `engine` in the `dundie.database` module to
     point to this test database file.
 
     Args:
       request (FixtureRequest): The request object for the fixture, used to
-                    get other fixtures.
+            get other fixtures.
+      monkeypatch (MonkeyPatch): The monkeypatch fixture for dynamically
+            modifying attributes.
 
     Yields:
       None
     """
     tmpdir = request.getfixturevalue("tmpdir")
-    test_database = str(tmpdir.join("test_database.json"))
-    with patch("dundie.database.DATABASE_PATH", test_database):
+    test_database = str(tmpdir.join(TEST_DATABASE_FILE))
+    engine = create_engine(f"sqlite:///{test_database}")
+    models.SQLModel.metadata.create_all(bind=engine)
+    with monkeypatch.context() as m:
+        m.setattr("dundie.database.engine", engine)
+        yield
+
+
+@pytest.fixture(autouse=True)
+def _setup_test_logfile(request, monkeypatch):
+    """
+    Fixture to set up a temporary test log file for testing purposes.
+
+    This fixture creates a temporary directory and a test log file within
+    it. It then patches the `LOGFILE` in the `dundie.core` module to
+    point to this test log file.
+
+    Args:
+      request (FixtureRequest): The request object for the fixture, used to
+            get other fixtures.
+      monkeypatch (MonkeyPatch): The monkeypatch fixture for dynamically
+            modifying attributes.
+
+    Yields:
+      None
+    """
+    # FIXME: It is not changing the file name.
+    tmpdir = request.getfixturevalue("tmpdir")
+    test_log_file = str(tmpdir.join(TEST_LOG_FILE))
+    print("test_log_file", test_log_file)
+    with monkeypatch.context() as m:
+        m.setattr(log, f"{log_file.name}", test_log_file)
         yield
