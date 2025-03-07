@@ -1,15 +1,23 @@
 """dundie load subcommand unit test."""
 
+import os
+
 import pytest
 
 from dundie.core import load
-
-from .constants import EMPLOYEES_FILE
+from dundie.settings import CURRENT_PATH, LOG_FILE
+from tests.constants import (
+    CEO_DATA,
+    INVALID_EMAILS,
+    SALES_ASSOCIATE_DATA,
+    SALES_MANAGER_DATA,
+    VALID_EMAILS,
+)
 
 
 @pytest.mark.unit
 @pytest.mark.high
-def test_load_positive_has_2_employees(request):
+def test_negative_load_empty_csv():
     """
     Test that the load function correctly loads and returns 2 employees from\
     the EMPLOYEES_FILE.
@@ -20,51 +28,115 @@ def test_load_positive_has_2_employees(request):
     Asserts:
         The length of the list returned by the load function is 2.
     """
-    assert len(load(EMPLOYEES_FILE)) == 3
+    empty_csv_file = "empty.csv"
+    open(os.path.join(CURRENT_PATH, empty_csv_file), "w").close()
+
+    assert len(load(empty_csv_file)) == 0
 
 
 @pytest.mark.unit
 @pytest.mark.high
-def test_load_positive_first_employee_name(request):
+@pytest.mark.parametrize(
+    "employees_data",
+    [
+        [SALES_ASSOCIATE_DATA],
+        [SALES_ASSOCIATE_DATA, SALES_MANAGER_DATA],
+        [SALES_ASSOCIATE_DATA, SALES_MANAGER_DATA, CEO_DATA],
+    ],
+)
+@pytest.mark.parametrize("valid_email", VALID_EMAILS)
+def test_positive_load_csv_with_multiple_employees_and_valid_email(
+    employees_data, valid_email
+):
     """
-    Test that the first employee's name in the loaded employee file is\
-    "Jim Halpert".
+    Test that the load function raises a ValidationError when an invalid email\
+    address is provided in the EMPLOYEES_FILE.
 
     Args:
-        request: A fixture that provides information about the test function.
+        request: A pytest fixture that provides information about the test
+          execution.
+        invalid_email: A string representing an invalid email address.
     Asserts:
-        The first employee's name in the loaded employee file is "Jim Halpert".
+        A ValidationError is raised when an invalid email address is provided.
     """
-    assert load(EMPLOYEES_FILE)[0]["name"] == "Jim Halpert"
+    employees_file = "multiple_employees.csv"
+
+    employees_data[0]["email"] = valid_email
+
+    with open(os.path.join(CURRENT_PATH, employees_file), "w") as file:
+        file.write(", ".join(employees_data[0].keys()) + "\n")
+        for employee_data in employees_data:
+            file.write(", ".join(employee_data.values()) + "\n")
+
+    result = load(employees_file)
+
+    assert len(result) == len(employees_data)
+
+    for employee_data in employees_data:
+        assert result[0]["name"] == employee_data["name"]
+        assert result[0]["email"] == employee_data["email"]
+        assert result[0]["role"] == employee_data["role"]
+        assert result[0]["department"] == employee_data["department"]
+        result.pop(0)
 
 
 @pytest.mark.unit
 @pytest.mark.high
-def test_load_positive_second_employee_name(request):
+@pytest.mark.parametrize(
+    "invalid_employee_id",
+    [
+        0,
+        1,
+    ],
+)
+@pytest.mark.parametrize(
+    "employees_data",
+    [
+        [SALES_ASSOCIATE_DATA],
+        [SALES_ASSOCIATE_DATA, SALES_MANAGER_DATA],
+    ],
+)
+@pytest.mark.parametrize("invalid_email", INVALID_EMAILS)
+def test_negative_load_csv_with_multiple_employees_and_invalid_email(
+    invalid_employee_id, employees_data, invalid_email
+):
     """
-    Test that the second employee's name in the loaded employee file is\
-    "Dwight Schrute".
+    Test that the load function raises a ValidationError when an invalid email\
+    address is provided in the EMPLOYEES_FILE.
 
     Args:
-        request: A fixture that provides information about the test function.
+        request: A pytest fixture that provides information about the test
+          execution.
+        invalid_email: A string representing an invalid email address.
     Asserts:
-        The second employee's name in the loaded employee file is
-          "Dwight Schrute".
+        A ValidationError is raised when an invalid email address is provided.
     """
-    assert load(EMPLOYEES_FILE)[1]["name"] == "Dwight Schrute"
+    employees_file = "invalid_email.csv"
 
+    if len(employees_data) == 1:
+        invalid_employee = employees_data[0]
+    else:
+        invalid_employee = employees_data[invalid_employee_id]
 
-@pytest.mark.unit
-@pytest.mark.high
-def test_load_positive_third_employee_name(request):
-    """
-    Test that the third employee's name in the loaded employee file is\
-    "Gabe Lewis".
+    invalid_employee["email"] = invalid_email
 
-    Args:
-        request: A fixture that provides information about the test function.
-    Asserts:
-        The third employee's name in the loaded employee file is
-          "Gabe Lewis".
-    """
-    assert load(EMPLOYEES_FILE)[2]["name"] == "Gabe Lewis"
+    trimmed_invalid_email = invalid_email.strip('"')
+
+    if not invalid_email.strip():
+        invalid_employee_msg = f"{{'name': {invalid_employee["name"]!r}, 'email': '', 'role': {invalid_employee["role"]!r}, 'department': {invalid_employee["department"]!r}}}"  # noqa E501
+        error_msg = f"Employee {invalid_employee_msg} has an invalid email ''"
+    else:
+        invalid_employee_msg = f"{{'name': {invalid_employee["name"]!r}, 'email': {trimmed_invalid_email!r}, 'role': {invalid_employee["role"]!r}, 'department': {invalid_employee["department"]!r}}}"  # noqa E501
+        error_msg = f"Employee {invalid_employee_msg} has an invalid email {trimmed_invalid_email!r}"  # noqa E501
+
+    with open(os.path.join(CURRENT_PATH, employees_file), "w") as file:
+        file.write(", ".join(employees_data[0].keys()) + "\n")
+        for employee_data in employees_data:
+            file.write(", ".join(employee_data.values()) + "\n")
+
+    assert len(load(employees_file)) == (
+        0 if invalid_employee_id == 0 else len(employees_data) - 1
+    )
+
+    with open(os.path.join(CURRENT_PATH, LOG_FILE), "r") as logfile:
+        assert error_msg in logfile.read()

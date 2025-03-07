@@ -1,6 +1,7 @@
+setuptools
 click
 rich
 rich-click
-setuptools
 pydantic
 pydantic[email]
+sqlmodel

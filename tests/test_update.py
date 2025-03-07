@@ -1,9 +1,16 @@
 """dundie update subcommand unit test."""
 
+from collections import deque
+
 import pytest
+from sqlmodel import select
 
 from dundie.core import read, update
-from dundie.database import add_employee, commit, connect
+from dundie.database import get_session
+from dundie.models import Employee
+from dundie.utils.db import add_employee
+
+from .constants import CEO_DATA, SALES_ASSOCIATE_DATA, SALES_MANAGER_DATA
 
 
 def test_update_points_to_existing_employee():
@@ -20,22 +27,23 @@ def test_update_points_to_existing_employee():
     7. Reads the employee data from the database.
     8. Asserts that the employee's balance has been correctly updated.
     """
-    db = connect()
-    email = "test@example.com"
-    employee_data = {
-        "name": "Test User",
-        "department": "Engineering",
-        "role": "Developer",
-    }
-    add_employee(db, email, employee_data)
-    commit(db)
+    with get_session() as session:
+        employee = Employee(**SALES_ASSOCIATE_DATA)
+        add_employee(session, employee)
+        session.commit()
 
-    db = connect()
-    previous_balance = db["balance"][email]
+    with get_session() as session:
+        sql = select(Employee).where(
+            Employee.email == SALES_ASSOCIATE_DATA["email"]
+        )
+        result = session.exec(sql).first()
 
-    update(100, email=email)
+        previous_balance = result.balance[0].value
 
-    employees = read(email=email)
+    update(100, email=SALES_ASSOCIATE_DATA["email"])
+
+    employees = read(email=SALES_ASSOCIATE_DATA["email"])
+
     assert employees[0]["balance"] == previous_balance + 100
 
 
@@ -54,38 +62,40 @@ def test_update_points_to_multiple_employees():
     6. Asserts that the balance for each employee has been correctly updated
       by 50 points.
     """
-    db = connect()
     employees_data = [
-        {
-            "email": "test1@example.com",
-            "name": "Test User 1",
-            "department": "Engineering",
-            "role": "Developer",
-        },
-        {
-            "email": "test2@example.com",
-            "name": "Test User 2",
-            "department": "Engineering",
-            "role": "Manager",
-        },
+        SALES_ASSOCIATE_DATA,
+        SALES_MANAGER_DATA,
+        CEO_DATA,
     ]
-    for data in employees_data:
-        add_employee(db, data["email"], data)
-    commit(db)
+    with get_session() as session:
+        for data in employees_data:
+            employee = Employee(**data)
+            add_employee(session, employee)
+        session.commit()
 
-    db = connect()
     previous_balance = []
-    for data in employees_data:
-        employees = read(email=data["email"])
-        previous_balance.append(db["balance"][data["email"]])
 
-    previous_balance.reverse()
+    with get_session() as session:
+        sql = select(Employee).order_by(Employee.id)
+        result = session.exec(sql)
 
-    update(50, department="Engineering")
+        for data in result:
+            previous_balance.append(data.balance[0].value)
 
-    for data in employees_data:
-        employees = read(email=data["email"])
-        assert employees[0]["balance"] == previous_balance.pop() + 50
+    previous_balance = deque(previous_balance)
+
+    department = SALES_ASSOCIATE_DATA["department"]
+    update(50, department=department)
+
+    with get_session() as session:
+        sql = select(Employee).order_by(Employee.id)
+        result = session.exec(sql)
+
+        for data in result:
+            if data.department == department:
+                assert data.balance[0].value == previous_balance.popleft() + 50
+            else:
+                assert data.balance[0].value == previous_balance.popleft()
 
 
 def test_update_points_no_employees_found():
@@ -121,40 +131,33 @@ def test_update_points_to_all_employees():
     10. Asserts that the new balance of each employee is equal to the previous
       balance plus the update amount.
     """
-    db = connect()
     employees_data = [
-        {
-            "email": "test1@example.com",
-            "name": "Test User 1",
-            "department": "Engineering",
-            "role": "Developer",
-        },
-        {
-            "email": "test2@example.com",
-            "name": "Test User 2",
-            "department": "Engineering",
-            "role": "Manager",
-        },
-        {
-            "email": "test3@example.com",
-            "name": "Test User 3",
-            "department": "HR",
-            "role": "Recruiter",
-        },
+        SALES_ASSOCIATE_DATA,
+        SALES_MANAGER_DATA,
+        CEO_DATA,
     ]
-    for data in employees_data:
-        add_employee(db, data["email"], data)
-    commit(db)
+    with get_session() as session:
+        for data in employees_data:
+            employee = Employee(**data)
+            add_employee(session, employee)
+        session.commit()
 
-    db = connect()
     previous_balance = []
-    for data in employees_data:
-        previous_balance.append(db["balance"][data["email"]])
 
-    previous_balance.reverse()
+    with get_session() as session:
+        sql = select(Employee).order_by(Employee.id)
+        result = session.exec(sql)
+
+        for data in result:
+            previous_balance.append(data.balance[0].value)
+
+    previous_balance = deque(previous_balance)
 
     update(25)
 
-    for data in employees_data:
-        employees = read(email=data["email"])
-        assert employees[0]["balance"] == previous_balance.pop() + 25
+    with get_session() as session:
+        sql = select(Employee).order_by(Employee.id)
+        result = session.exec(sql)
+
+        for data in result:
+            assert data.balance[0].value == previous_balance.popleft() + 25

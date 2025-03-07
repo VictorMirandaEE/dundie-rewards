@@ -4,6 +4,8 @@ import re
 import smtplib
 from email.mime.text import MIMEText
 
+from pydantic import EmailStr
+
 from dundie.settings import (
     SMTP_HOST,
     SMTP_PASSWORD,
@@ -12,8 +14,6 @@ from dundie.settings import (
     SMTP_USERNAME,
 )
 from dundie.utils.log import get_logger
-
-log = get_logger()
 
 regex = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"  # noqa E501
 
@@ -30,13 +30,16 @@ def check_valid_email(address: str) -> bool:
     return bool(re.fullmatch(regex, address))
 
 
-def send_email(sender: str, recipient: list, subject: str, body: str) -> None:
+def send_email(
+    sender: str, recipient: EmailStr | list[EmailStr], subject: str, body: str
+) -> None:
     """
     Send an email using the specified parameters.
 
     Args:
         sender (str): The email address of the sender.
-        recipient (list): A list of recipient email addresses.
+        recipient (EmailStr | list[EmailStr]): A single recipient email address
+          or a list of recipient email addresses.
         subject (str): The subject of the email.
         body (str): The body content of the email.
 
@@ -44,6 +47,8 @@ def send_email(sender: str, recipient: list, subject: str, body: str) -> None:
         Exception: If there is an error sending the email, it logs the error
           message.
     """
+    log = get_logger()
+
     if not isinstance(recipient, list):
         recipient = [recipient]
     try:

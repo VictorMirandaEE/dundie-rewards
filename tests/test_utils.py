@@ -4,24 +4,11 @@ import pytest
 
 from dundie.utils.email import check_valid_email
 from dundie.utils.user import generate_simple_password
+from tests.constants import INVALID_EMAILS, VALID_EMAILS
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "valid_email",
-    [
-        "alice@example.com",
-        "bob.smith@example.co.uk",
-        "charlie123@example.org",
-        "david_jones@example.net",
-        "eve-adams@example.io",
-        "frank@example.edu",
-        "george@example.com",
-        "hannah@example.com",
-        "ian@example.com",
-        "julia@example.com",
-    ],
-)
+@pytest.mark.parametrize("valid_email", VALID_EMAILS)
 def test_positive_check_valid_email(valid_email):
     """
     Test that the check_valid_email function correctly identifies a valid\
@@ -34,22 +21,7 @@ def test_positive_check_valid_email(valid_email):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "invalid_email",
-    [
-        "alice.example.com",
-        "bob.smith@.co.uk",
-        "charlie123@.org",
-        "david_jones@example",
-        "eve-adams@.io",
-        "frank@.edu",
-        "george@com",
-        "@example.com",
-        "hannah@example..com",
-        "ian@.com",
-        "julia@com",
-    ],
-)
+@pytest.mark.parametrize("invalid_email", INVALID_EMAILS)
 def test_negative_check_valid_email(invalid_email):
     """
     Test that the check_valid_email function correctly identifies an invalid\

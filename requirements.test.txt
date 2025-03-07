@@ -3,6 +3,7 @@ pytest-forked
 
 # Code quality
 flake8
+flake8-pytest-style
 pyproject-flake8
 black
 isort
