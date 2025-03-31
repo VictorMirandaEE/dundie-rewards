@@ -301,6 +301,7 @@ def test_positive_update_employee() -> None:
             "name": "Initial Name",
             "role": "Initial Role",
             "department": "Initial Department",
+            "currency": "USD",
         }
         employee = Employee(**initial_data)
         initial_instance, initial_created = add_employee(session, employee)
@@ -317,6 +318,7 @@ def test_positive_update_employee() -> None:
             "name": "Updated Name",
             "role": "Updated Role",
             "department": "Updated Department",
+            "currency": "BRL",
         }
         employee = Employee(**updated_data)
         updated_instance, updated_created = add_employee(session, employee)

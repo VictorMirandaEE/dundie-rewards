@@ -102,7 +102,6 @@ def _setup_test_logfile(request, monkeypatch):
     # FIXME: It is not changing the file name.
     tmpdir = request.getfixturevalue("tmpdir")
     test_log_file = str(tmpdir.join(TEST_LOG_FILE))
-    print("test_log_file", test_log_file)
     with monkeypatch.context() as m:
         m.setattr(log, f"{log_file.name}", test_log_file)
         yield

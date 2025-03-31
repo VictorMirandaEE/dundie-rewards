@@ -77,6 +77,7 @@ def test_positive_load_csv_with_multiple_employees_and_valid_email(
         assert result[0]["email"] == employee_data["email"]
         assert result[0]["role"] == employee_data["role"]
         assert result[0]["department"] == employee_data["department"]
+        assert result[0]["currency"] == employee_data["currency"]
         result.pop(0)
 
 
@@ -123,10 +124,10 @@ def test_negative_load_csv_with_multiple_employees_and_invalid_email(
     trimmed_invalid_email = invalid_email.strip('"')
 
     if not invalid_email.strip():
-        invalid_employee_msg = f"{{'name': {invalid_employee["name"]!r}, 'email': '', 'role': {invalid_employee["role"]!r}, 'department': {invalid_employee["department"]!r}}}"  # noqa E501
+        invalid_employee_msg = f"{{'name': {invalid_employee["name"]!r}, 'email': '', 'role': {invalid_employee["role"]!r}, 'department': {invalid_employee["department"]!r}, 'currency': {invalid_employee["currency"]!r}}}"  # noqa E501
         error_msg = f"Employee {invalid_employee_msg} has an invalid email ''"
     else:
-        invalid_employee_msg = f"{{'name': {invalid_employee["name"]!r}, 'email': {trimmed_invalid_email!r}, 'role': {invalid_employee["role"]!r}, 'department': {invalid_employee["department"]!r}}}"  # noqa E501
+        invalid_employee_msg = f"{{'name': {invalid_employee["name"]!r}, 'email': {trimmed_invalid_email!r}, 'role': {invalid_employee["role"]!r}, 'department': {invalid_employee["department"]!r}, 'currency': {invalid_employee["currency"]!r}}}"  # noqa E501
         error_msg = f"Employee {invalid_employee_msg} has an invalid email {trimmed_invalid_email!r}"  # noqa E501
 
     with open(os.path.join(CURRENT_PATH, employees_file), "w") as file:

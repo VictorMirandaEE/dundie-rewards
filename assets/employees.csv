@@ -1,4 +1,7 @@
-name, email, role, department
-Jim Halpert, jim@dundermifflin.com, Salesman, Sales
-Dwight Schrute, schrute@dundermifflin.com, Sales Manager, Sales
-Gabe Lewis, gabe@dundermifflin.com, Director, Board of Directors
+name, email, role, department, currency
+Jim Halpert, jim@dundermifflin.com, Salesman, Sales, USD
+Dwight Schrute, schrute@dundermifflin.com, Sales Manager, Sales, EUR
+Gabe Lewis, gabe@dundermifflin.com, Director, Board of Directors, BRL
+Michael Scott, mike@dd.com, Regional Manager, Management, BRL
+Pam Beesly, pam@dd.com, Receptionist, Administration, EUR
+Creed Bratton, creed@dd.com, Quality Assurance, Quality Assurance, EUR

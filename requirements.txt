@@ -5,3 +5,5 @@ rich-click
 pydantic
 pydantic[email]
 sqlmodel
+alembic
+httpx

@@ -21,6 +21,7 @@ SALES_ASSOCIATE_DATA: Dict[str, str] = {
     "email": "john@doe.com",
     "role": "Salesman",
     "department": "Sales",
+    "currency": "USD",
 }
 
 SALES_MANAGER_DATA: Dict[str, str] = {
@@ -28,6 +29,7 @@ SALES_MANAGER_DATA: Dict[str, str] = {
     "email": "jane@doe.com",
     "role": "Manager",
     "department": "Sales",
+    "currency": "USD",
 }
 
 CEO_DATA: Dict[str, str] = {
@@ -35,6 +37,7 @@ CEO_DATA: Dict[str, str] = {
     "email": "ceo@doe.com",
     "role": "CEO",
     "department": "Board of Directors",
+    "currency": "USD",
 }
 
 VALID_EMAILS: List[str] = [

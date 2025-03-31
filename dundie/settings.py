@@ -75,3 +75,7 @@ LOG_FORMAT: str = (
 LOG_LEVEL: str = "WARNING"
 LOG_MAX_BYTES: int = 500  # recommended: 1_000_000
 LOG_BACKUP_COUNT: int = 3
+
+API_BASE_URL: str = (
+    "https://economia.awesomeapi.com.br/json/last/USD-{currency}"
+)
