@@ -60,7 +60,7 @@ def load(filepath: str) -> None:
     - Displays the data.
     """
     table = Table(title="Dunder Mifflin Employees")
-    headers = ["Name", "e-mail", "Role", "Department", "Created"]
+    headers = ["Name", "e-mail", "Role", "Department", "Currency", "Created"]
     for header in headers:
         table.add_column(header, header_style="magenta", highlight=True)
 
@@ -117,6 +117,8 @@ def show(**query) -> None:
         table.add_column(key.title(), header_style="magenta", highlight=True)
 
     for employee in result:
+        employee["balance"] = f"{employee['balance']:.2f}"
+        employee["total"] = f"{employee['total']:.2f}"
         table.add_row(*[str(entry) for entry in employee.values()])
 
     if query["format"] == "json":

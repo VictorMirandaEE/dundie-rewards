@@ -16,6 +16,7 @@ from dundie.database import get_session
 from dundie.models import Employee
 from dundie.settings import DATE_FORMAT
 from dundie.utils.db import add_employee, add_transaction
+from dundie.utils.exchange import get_exchange_rates
 from dundie.utils.log import get_logger
 
 Query = Dict[str, Any]
@@ -160,8 +161,16 @@ def read(**query: Query) -> ResultDict:
         sql = sql.where(*sql_statement)
 
     with get_session() as session:
+        currencies = session.exec(select(Employee.currency).distinct())
+        exchange_rates = get_exchange_rates(list(currencies))
+
         results = session.exec(sql)
         for employee in results:
+            total = (
+                exchange_rates[employee.currency].value
+                * employee.balance[0].value
+            )
+
             return_data.append(
                 {
                     "name": employee.name,
@@ -169,6 +178,8 @@ def read(**query: Query) -> ResultDict:
                     "role": employee.role,
                     "department": employee.department,
                     "balance": employee.balance[0].value,
+                    "currency": employee.currency,
+                    "total": total,
                     "last_transaction": employee.transaction[-1].date.strftime(
                         DATE_FORMAT
                     ),

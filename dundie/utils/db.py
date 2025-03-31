@@ -47,6 +47,7 @@ def add_employee(session: Session, employee: Employee) -> tuple:
         existing.name = employee.name
         existing.department = employee.department
         existing.role = employee.role
+        existing.currency = employee.currency
         session.add(existing)
     else:
         session.add(employee)

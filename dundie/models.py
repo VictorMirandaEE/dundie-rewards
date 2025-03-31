@@ -65,6 +65,12 @@ class Employee(SQLModelValidation, table=True):
     name: str = Field(nullable=False)
     department: str = Field(nullable=False, index=True)
     role: str = Field(nullable=False)
+    currency: str = Field(
+        nullable=False,
+        sa_column_kwargs={
+            "server_default": "USD",
+        },
+    )
 
     balance: list["Balance"] = Relationship(back_populates="employee")
     transaction: list["Transaction"] = Relationship(back_populates="employee")
@@ -117,7 +123,7 @@ class Transaction(SQLModelValidation, table=True):
     ]  # FIXME: Set decimal precision and scale
     description: str = Field(nullable=False)
     actor: str = Field(nullable=False, index=True)
-    date: datetime = Field(default_factory=lambda: datetime.now())
+    date: datetime = Field(default_factory=datetime.now)
 
     employee_id: int = Field(foreign_key="employee.id")
     employee: Employee = Relationship(back_populates="transaction")
