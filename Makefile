@@ -20,13 +20,20 @@ ipython:
 
 # Run tests using pytest.
 test:
-	@.venv/bin/pytest -s --forked
+	@.venv/bin/pytest -s --forked --cov=dundie
+	@.venv/bin/coverage xml
+	@.venv/bin/coverage html
+
+# Run tests with coverage and generate HTML report.
+test-html:
+	@.venv/bin/pytest -s --forked --cov=dundie --cov-report html
+	@.venv/bin/pytest -s --forked --cov=dundie --cov-report term-missing
 
 
 # Watch for changes and run tests.
 watch:
 	# @.venv/bin/ptw -- -vv -s
-	@ls **/*.py | entr pytest -s --forked
+	@ls **/*.py | entr pytest -s --forked --cov=dundie
 
 
 # Lint code using flake8.

@@ -1,6 +1,7 @@
 """dundie load subcommand unit test."""
 
 import os
+from unittest.mock import patch
 
 import pytest
 
@@ -13,6 +14,22 @@ from tests.constants import (
     SALES_MANAGER_DATA,
     VALID_EMAILS,
 )
+
+
+@pytest.fixture
+def mock_logger():
+    """
+    Mock the logger used in the dundie.core module for testing purposes.
+
+    This function uses the `patch` context manager to replace the `get_logger`
+    function in the `dundie.core` module with a mock object. It yields the mock
+    logger, allowing tests to assert logging behavior.
+
+    Yields:
+        unittest.mock.MagicMock: A mock object for the logger.
+    """
+    with patch("dundie.core.get_logger") as mock_log:
+        yield mock_log
 
 
 @pytest.mark.unit
@@ -141,3 +158,24 @@ def test_negative_load_csv_with_multiple_employees_and_invalid_email(
 
     with open(os.path.join(CURRENT_PATH, LOG_FILE), "r") as logfile:
         assert error_msg in logfile.read()
+
+
+@pytest.mark.unit
+@pytest.mark.high
+def test_negative_load_file_not_found(mock_logger):
+    """
+    Test that the load function handles a FileNotFoundError when the specified\
+    file does not exist.
+
+    Asserts:
+        The logger records an error message indicating the file was not found.
+        The load function returns an empty list when the file is missing.
+    """
+    with patch(
+        "builtins.open", side_effect=FileNotFoundError("File not found")
+    ):
+        result = load("nonexistent.csv")
+
+    mock_logger().error.assert_called_with("FileNotFoundError: File not found")
+
+    assert result == []
