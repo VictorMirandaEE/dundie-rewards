@@ -20,13 +20,15 @@ ipython:
 
 # Run tests using pytest.
 test:
-	@.venv/bin/pytest -s --forked
+	@.venv/bin/pytest -s --forked --cov=dundie --cov-branch
+	@.venv/bin/coverage xml
+	@.venv/bin/coverage html
 
 
 # Watch for changes and run tests.
 watch:
 	# @.venv/bin/ptw -- -vv -s
-	@ls **/*.py | entr pytest -s --forked
+	@ls **/*.py | entr pytest -s --forked --cov=dundie --cov-branch
 
 
 # Lint code using flake8.
