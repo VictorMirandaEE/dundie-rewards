@@ -33,7 +33,6 @@ def mock_logger():
 
 
 @pytest.mark.unit
-@pytest.mark.high
 def test_negative_load_empty_csv():
     """
     Test that the load function correctly loads and returns 2 employees from\
@@ -52,7 +51,6 @@ def test_negative_load_empty_csv():
 
 
 @pytest.mark.unit
-@pytest.mark.high
 @pytest.mark.parametrize(
     "employees_data",
     [
@@ -99,7 +97,6 @@ def test_positive_load_csv_with_multiple_employees_and_valid_email(
 
 
 @pytest.mark.unit
-@pytest.mark.high
 @pytest.mark.parametrize(
     "invalid_employee_id",
     [
@@ -161,7 +158,6 @@ def test_negative_load_csv_with_multiple_employees_and_invalid_email(
 
 
 @pytest.mark.unit
-@pytest.mark.high
 def test_negative_load_file_not_found(mock_logger):
     """
     Test that the load function handles a FileNotFoundError when the specified\

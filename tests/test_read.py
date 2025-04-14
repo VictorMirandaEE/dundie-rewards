@@ -1,5 +1,7 @@
 """dundie read function unit test."""
 
+import pytest
+
 from dundie.core import read
 from dundie.database import get_session
 from dundie.models import Employee
@@ -8,6 +10,7 @@ from dundie.utils.db import add_employee
 from .constants import CEO_DATA, SALES_ASSOCIATE_DATA, SALES_MANAGER_DATA
 
 
+@pytest.mark.unit
 def test_positive_read_no_query():
     """
     Test the read function without any query parameters.
@@ -43,6 +46,7 @@ def test_positive_read_no_query():
     assert result[2]["name"] == CEO_DATA["name"]
 
 
+@pytest.mark.unit
 def test_negative_read_no_query():
     """
     Test the read function without any query parameters.
@@ -61,6 +65,7 @@ def test_negative_read_no_query():
     assert len(result) == 0
 
 
+@pytest.mark.unit
 def test_positive_read_with_email_query():
     """
     Test the read function with an email query.
@@ -89,6 +94,7 @@ def test_positive_read_with_email_query():
     assert result[0]["name"] == SALES_ASSOCIATE_DATA["name"]
 
 
+@pytest.mark.unit
 def test_negative_read_with_email_query():
     """
     Test the read function with an email query.
@@ -115,6 +121,7 @@ def test_negative_read_with_email_query():
     assert len(result) == 0
 
 
+@pytest.mark.unit
 def test_positive_read_with_department_query_single_match():
     """
     Test the read function with a department query.
@@ -146,6 +153,7 @@ def test_positive_read_with_department_query_single_match():
     assert result[0]["department"] == CEO_DATA["department"]
 
 
+@pytest.mark.unit
 def test_positive_read_with_department_query_multiple_matches():
     """
     Test the read function with a department query.
@@ -179,6 +187,7 @@ def test_positive_read_with_department_query_multiple_matches():
     assert result[1]["department"] == SALES_MANAGER_DATA["department"]
 
 
+@pytest.mark.unit
 def test_negative_read_with_department_query():
     """
     Test the read function with a department query.

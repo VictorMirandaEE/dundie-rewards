@@ -189,28 +189,36 @@ def read(**query: Query) -> ResultDict:
     return return_data
 
 
-def update(value: Decimal, **query: Query) -> None:
+def update(value: Decimal, **query: Query) -> str:
     """
     Update the balance of employees based on the given value and query\
     parameters.
+
+    This function retrieves employees matching the provided query parameters,
+    updates their balance by the specified value, and logs the transaction. If
+    no employees are found, or if an employee is not present in the database,
+    appropriate messages are returned.
 
     Args:
         value (Decimal): The amount to update the balance by.
         **query: Arbitrary keyword arguments used to filter employees.
 
-    Raises:
-        RuntimeError: If no employees are found matching the query.
+    Returns:
+        str: A message indicating the result of the operation. If no employees
+        are found, or if an employee is missing in the database, a descriptive
+        message is returned. Otherwise, an empty string is returned.
 
     Environment Variables:
         USER: The username of the person performing the update. Defaults to
           "system" if not set.
     """
+    result = ""
+
     employees = read(**query)
 
-    log = get_logger()
-
     if not employees:
-        raise RuntimeError("No employees found")
+        result = "No employees found"
+        return result
 
     with get_session() as session:
         user = os.getenv("USER", "system")
@@ -220,11 +228,13 @@ def update(value: Decimal, **query: Query) -> None:
                 select(Employee).where(Employee.email == email)
             ).first()
             if instance:
-                # instance.balance.value += value
                 add_transaction(
                     session, instance, value, "Updated points", user
                 )
             else:
-                log.error(f"Employee {email!r} not found in the database")
+                result = f"Employee {email!r} not found in the database"
+                return result
 
         session.commit()
+
+    return result
