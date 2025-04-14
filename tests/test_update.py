@@ -13,6 +13,7 @@ from dundie.utils.db import add_employee
 from .constants import CEO_DATA, SALES_ASSOCIATE_DATA, SALES_MANAGER_DATA
 
 
+@pytest.mark.unit
 def test_update_points_to_existing_employee():
     """
     Test the update of points to an existing employee.
@@ -47,6 +48,7 @@ def test_update_points_to_existing_employee():
     assert employees[0]["balance"] == previous_balance + 100
 
 
+@pytest.mark.unit
 def test_update_points_to_multiple_employees():
     """
     Test updating points for multiple employees in the Engineering department.
@@ -98,6 +100,7 @@ def test_update_points_to_multiple_employees():
                 assert data.balance[0].value == previous_balance.popleft()
 
 
+@pytest.mark.unit
 def test_update_points_no_employees_found():
     """
     Test case for updating points when no employees are found.
@@ -109,10 +112,10 @@ def test_update_points_no_employees_found():
     Raises:
         RuntimeError: If no employees are found with the given email.
     """
-    with pytest.raises(RuntimeError, match="No employees found"):
-        update(100, email="nonexistent@example.com")
+    assert update(100, email="nonexistent@example.com") == "No employees found"
 
 
+@pytest.mark.unit
 def test_update_points_to_all_employees():
     """
     Test the update of points to all employees.

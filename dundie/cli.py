@@ -154,5 +154,10 @@ def update(ctx, value: Decimal, **query) -> None:
 
     - Filter by email or department.
     """
-    core.update(value, **query)
+    result = core.update(value, **query)
+    if result:
+        console = Console()
+        console.print(result)
+        return
+
     ctx.invoke(show, **query)

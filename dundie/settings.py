@@ -52,7 +52,8 @@ SMTP_PASSWORD: str = "password"
 
 CURRENT_PATH: str = os.curdir
 
-DATABASE_PATH: str = os.path.join(CURRENT_PATH, "assets", "database.db")
+DATABASE_DIR: str = os.path.join(CURRENT_PATH, "assets")
+DATABASE_PATH: str = os.path.join(DATABASE_DIR, "database.db")
 SQL_CONNECTION_STRING: str = f"sqlite:///{DATABASE_PATH}"
 
 EMAIL_FROM: str = "system@dundie.com"

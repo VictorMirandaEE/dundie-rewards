@@ -41,6 +41,7 @@ def mock_httpx_get():
         yield mock_get
 
 
+@pytest.mark.unit
 def test_get_exchange_rates_usd(mock_get_logger):
     """
     Test the `get_exchange_rates` function for the USD currency.
@@ -63,6 +64,7 @@ def test_get_exchange_rates_usd(mock_get_logger):
     assert result["USD"].value == Decimal(1)
 
 
+@pytest.mark.unit
 def test_get_exchange_rates_success(mock_httpx_get, mock_get_logger):
     """
     Test the successful retrieval of exchange rates using the\
@@ -103,6 +105,7 @@ def test_get_exchange_rates_success(mock_httpx_get, mock_get_logger):
     assert result["EUR"].value == Decimal("0.85")
 
 
+@pytest.mark.unit
 def test_get_exchange_rates_api_error(mock_httpx_get, mock_get_logger):
     """
     Test the behavior of the `get_exchange_rates` function when an API error\

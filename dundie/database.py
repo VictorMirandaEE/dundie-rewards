@@ -1,9 +1,11 @@
 """Database module of dundie."""
 
+import os
+
 from sqlmodel import Session, create_engine
 
 from dundie import models
-from dundie.settings import SQL_CONNECTION_STRING
+from dundie.settings import DATABASE_DIR, SQL_CONNECTION_STRING
 
 engine = None
 
@@ -21,6 +23,9 @@ def get_session() -> Session:
         Session: A new SQLModel session object.
     """
     global engine
+
+    if not os.path.exists(DATABASE_DIR):
+        os.makedirs(DATABASE_DIR)
 
     if not engine:
         engine = create_engine(SQL_CONNECTION_STRING, echo=False)
