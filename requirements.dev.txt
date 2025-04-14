@@ -13,12 +13,13 @@ black
 isort
 pep8-naming
 
+# typing
+mypy
+types-setuptools
+
 # Documentation
 mkdocs
 
 # Build
 build
 twine
-
-# Install project as editable
--e .
