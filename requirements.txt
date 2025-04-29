@@ -1,4 +1,3 @@
-setuptools
 click
 rich
 rich-click

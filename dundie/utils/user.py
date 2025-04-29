@@ -4,7 +4,7 @@ from random import sample
 from string import ascii_letters, digits
 
 
-def generate_simple_password(size=8) -> str:
+def generate_simple_password(size: int = 8) -> str:
     """
     Generate a simple password consisting of random letters and digits.
 

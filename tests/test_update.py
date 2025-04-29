@@ -105,12 +105,9 @@ def test_update_points_no_employees_found():
     """
     Test case for updating points when no employees are found.
 
-    This test ensures that the `update` function raises a `RuntimeError`
-    with the message "No employees found" when attempting to update points
-    for a non-existent employee.
-
-    Raises:
-        RuntimeError: If no employees are found with the given email.
+    This test ensures that the `update` function returns the message "No
+    employees found" when attempting to update points for a non-existent
+    employee.
     """
     assert update(100, email="nonexistent@example.com") == "No employees found"
 

@@ -172,3 +172,5 @@ cython_debug/
 
 # XML
 *.xml
+
+# Project-specific files

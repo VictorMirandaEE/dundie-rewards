@@ -1,17 +1,116 @@
+# This file is used to configure the build system and the project itself.
+# It is used by the build system to determine how to build the project and by the project to determine its metadata.
+# For more information, see:
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+# https://mypy.readthedocs.io/en/stable/config_file.html
+# https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html
+# https://pycqa.github.io/isort/docs/configuration/config_files.html
+
+# Build system specifications
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+# Project (metadata, build, install) specifications
+[project]
+name = "dundie"
+dynamic = ["version", "readme", "dependencies", "optional-dependencies"]
+requires-python = ">=3.10"
+authors = [
+    {name = "Victor Miranda", email = "victor@dundermifflin.com"}
+]
+maintainers = [
+    {name = "Victor Miranda", email = "victor@dundermifflin.com"}
+]
+description = "This is a CLI tool for managing the Dunder Mifflin rewards program."
+license = "Unlicense"
+license-files = ["LICENSE"]
+keywords = ["dundie", "cli", "rewards", "dunder mifflin"]
+classifiers = [
+    "Topic :: Utilities",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+]
+
+[project.urls]
+Homepage = "https://dundermifflin.com"
+Repository = "https://github.com/VictorMirandaEE/dundie-rewards"
+
+[project.scripts]
+dundie = "dundie.__main__:main"
+
+[project.gui-scripts]
+
+[tool.setuptools]
+packages = ["dundie"]
+
+[tool.setuptools.dynamic]
+readme = {file = "README.md"}
+dependencies = {file = ["requirements.txt"]}
+optional-dependencies.dev = {file = ["requirements.dev.txt"]}
+optional-dependencies.test = {file = ["requirements.test.txt"]}
+
+[tool.setuptools_scm]
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q -vv"
 testpaths = ["tests", "integration"]
+markers = [
+    "unit: Mark for unit tests",
+    "integration: Mark for integration tests",
+    "high: High priority",
+    "medium: Medium priority",
+    "low: Low priority",
+]
+
+[tool.mypy]
+packages = "dundie"
+warn_unused_configs = true
+show_error_code_links = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_untyped_decorators = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+warn_unreachable = true
+# strict = true
+pretty = true
 
 [tool.flake8]
-exclude = [".venv", "build"]
+exclude = [".venv", "build", ".vscodelocal", "migrations"]
 max-line-length = 79
+inline-quotes = '"'
+extend-select = ["B950"]
+extend-ignore = ["E203", "E501", "E701"]
 
 [tool.black]
-line-length = 79
 target-version = ["py313"]
+line-length = 79
+verbose = true
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.venv
+  | _build
+  | build
+  | dist
+  | migrations
+)/
+'''
 
 [tool.isort]
 profile = "black"
 src_paths = ["dundie", "tests", "integration"]
-multi_line_output = 3  # Vertical Hanging Indent
+line_length = 79

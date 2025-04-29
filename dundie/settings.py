@@ -23,6 +23,7 @@ Attributes:
 
 import os
 from decimal import Decimal
+from typing import Any, Dict, List
 
 
 class VariableWrapper:
@@ -38,7 +39,7 @@ class VariableWrapper:
         and a name.
     """
 
-    def __init__(self, value, name):
+    def __init__(self, value: str, name: str):
         """Initialize class."""
         self.value = value
         self.name = name
@@ -63,7 +64,7 @@ DEFAULT_ACTOR: str = "system"
 DEFAULT_MANAGER_POINTS: Decimal = Decimal(100)
 DEFAULT_ASSOCIATE_POINTS: Decimal = Decimal(500)
 
-PROJECT_NAME: str = "dundie-victor"
+PROJECT_NAME: str = "dundie"
 
 DATE_FORMAT: str = "%Y-%m-%d %H:%M:%S"
 
@@ -80,3 +81,6 @@ LOG_BACKUP_COUNT: int = 3
 API_BASE_URL: str = (
     "https://economia.awesomeapi.com.br/json/last/USD-{currency}"
 )
+
+Query = Dict[str, Any]
+ResultDict = List[Dict[str, Any]]
