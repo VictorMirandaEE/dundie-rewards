@@ -34,7 +34,7 @@ jobs:
       - name: Install Project
         run: pip install '.[test]'
       - name: Run typing check
-        run: mypy --ignore-missing-imports --show-error-codes dundie
+        run: mypy
       - name: Run code style check
         run: pflake8
       - name: Run code import order check
@@ -43,6 +43,8 @@ jobs:
           configuration: '--profile black --check-only --diff'
       - name: Run code formatting check
         uses: psf/black@stable
+        with:
+          options: '--check --diff'
   tests:
     needs: lint
     strategy:

@@ -10,7 +10,7 @@ from rich.console import Console
 from rich.table import Table
 
 from dundie import core
-from dundie.settings import PROJECT_NAME
+from dundie.settings import PROJECT_NAME, Query
 
 click.rich_click.USE_RICH_MARKUP = True
 click.rich_click.USE_MARKDOWN = True
@@ -23,18 +23,18 @@ click.rich_click.APPEND_METAVARS_HELP = True
 class CustomJSONEncoder(json.JSONEncoder):
     """Custom JSON encoder for Decimal and datetime objects."""
 
-    def default(self, obj):
+    def default(self, obj: object) -> str:
         """Convert Decimal and datetime objects to string."""
         if isinstance(obj, Decimal):
             return str(obj)
         if isinstance(obj, datetime):
             return str(obj)
-        return super().default(obj)
+        return str(super().default(obj))
 
 
 @click.group()
 @click.version_option(importlib.metadata.version(PROJECT_NAME))
-def main():
+def main() -> None:
     """Dunder Mifflin Rewards System.
 
     This is a CLI tool for managing the Dunder Mifflin Rewards program.
@@ -96,7 +96,7 @@ def load(filepath: str) -> None:
     default="txt",
     help="Output format (txt or json)",
 )
-def show(**query) -> None:
+def show(**query: Query) -> None:
     """Show employees data.
 
     ## Features
@@ -124,13 +124,15 @@ def show(**query) -> None:
     if query["format"] == "json":
         output_data = json.dumps(result, indent=4, cls=CustomJSONEncoder)
         if query["file"]:
-            query["file"].write(output_data)
+            with query["file"] as file:  # type: ignore
+                console = Console(file=file)
+                console.print(output_data)
         else:
             console = Console()
             console.print(output_data)
     else:
         if query["file"]:
-            with query["file"] as file:
+            with query["file"] as file:  # type: ignore
                 console = Console(file=file)
                 console.print(table)
         else:
@@ -143,7 +145,7 @@ def show(**query) -> None:
 @click.option("--email", required=False, help="Filter by employee email")
 @click.option("--department", required=False, help="Filter by department")
 @click.pass_context
-def update(ctx, value: Decimal, **query) -> None:
+def update(ctx: click.Context, value: Decimal, **query: Query) -> None:
     """Update the balance of reward points.
 
     VALUE is the number of points to add.

@@ -7,20 +7,17 @@ import os
 from csv import DictReader
 from csv import Error as CSVError
 from decimal import Decimal
-from typing import Any, Dict, List
+from typing import Any
 
 from pydantic import ValidationError
 from sqlmodel import select
 
 from dundie.database import get_session
 from dundie.models import Employee
-from dundie.settings import DATE_FORMAT
+from dundie.settings import DATE_FORMAT, Query, ResultDict
 from dundie.utils.db import add_employee, add_transaction
 from dundie.utils.exchange import get_exchange_rates
 from dundie.utils.log import get_logger
-
-Query = Dict[str, Any]
-ResultDict = List[Dict[str, Any]]
 
 
 def loc_to_dot_sep(loc: tuple[str | int, ...]) -> str:

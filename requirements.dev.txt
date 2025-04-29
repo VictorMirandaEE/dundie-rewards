@@ -1,4 +1,6 @@
 # Development dependencies
+setuptools
+setuptools-scm
 
 ipython
 ipdb
@@ -8,6 +10,8 @@ pytest-watch
 # Code quality
 flake8
 flake8-docstrings
+flake8-quotes
+flake8-bugbear
 pyproject-flake8
 black
 isort

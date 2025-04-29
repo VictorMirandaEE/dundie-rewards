@@ -33,13 +33,13 @@ watch:
 
 # Lint code using flake8.
 lint:
-	@.venv/bin/mypy --ignore-missing-imports --show-error-codes dundie
+	@.venv/bin/mypy
 	@.venv/bin/pflake8
 
 
 # Format code using isort and black.
 format:
-	@.venv/bin/isort --profile black .
+	@.venv/bin/isort .
 	@.venv/bin/black .
 
 

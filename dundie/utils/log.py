@@ -16,7 +16,7 @@ from dundie.settings import (
 # TODO: Use lib (loguru)
 
 
-def get_logger(logfile=LOG_FILE) -> Logger:
+def get_logger(logfile: str = LOG_FILE) -> Logger:
     """
     Create and configure a logger.
 

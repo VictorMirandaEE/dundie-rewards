@@ -174,4 +174,3 @@ cython_debug/
 *.xml
 
 # Project-specific files
-dundie/VERSION.txt

@@ -8,27 +8,6 @@ from dundie import models
 from dundie.settings import log_file
 from tests.constants import TEST_DATABASE_FILE, TEST_LOG_FILE
 
-MARKER = """\
-unit: Mark unit test
-integration: Mark integration test
-high: High priority
-medium: Medium priority
-low: Low priority
-"""
-
-
-def pytest_configure(config):
-    """
-    Configure pytest settings.
-
-    This function is called to configure pytest settings before running tests.
-    It reads marker definitions from the MARKER variable and adds them to
-      the pytest configuration.
-        config: The pytest configuration object.
-    """
-    for line in MARKER.split("\n"):
-        config.addinivalue_line("markers", line)
-
 
 @pytest.fixture(autouse=True)
 def _go_to_tmpdir(request):
