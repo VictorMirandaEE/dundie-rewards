@@ -31,7 +31,7 @@ watch:
 	@ls **/*.py | entr pytest -s --forked --cov=dundie --cov-branch
 
 
-# Lint code using flake8.
+# Lint code using MyPy and flake8.
 lint:
 	@.venv/bin/mypy
 	@.venv/bin/pflake8
@@ -73,6 +73,11 @@ docs-serve:
 # Build and generate distribution files in .egg and .whl formats.
 build:
 	@.venv/bin/python -m build --sdist --wheel
+
+
+# Build for offline installation, i.e., .whl format including all package dependencies.
+all_wheels:
+	@pip wheel . -w wheels
 
 
 # Publish module package to test pypi.

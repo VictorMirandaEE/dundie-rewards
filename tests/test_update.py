@@ -1,6 +1,7 @@
 """dundie update subcommand unit test."""
 
 from collections import deque
+from typing import Generator
 
 import pytest
 from sqlmodel import select
@@ -13,8 +14,39 @@ from dundie.utils.db import add_employee
 from .constants import CEO_DATA, SALES_ASSOCIATE_DATA, SALES_MANAGER_DATA
 
 
+@pytest.fixture(autouse=True)
+def _auth(monkeypatch: pytest.MonkeyPatch) -> Generator[None, None, None]:
+    """Fixture to set up an authenticated environment for testing.
+
+    This function uses a monkeypatch context to set environment variables
+    for an employee's email and password. It creates a manager employee
+    in the database with the specified credentials and commits the session.
+
+    Args:
+        monkeypatch: A pytest fixture used to modify or set environment variables.
+
+    Yields:
+        None: This is a generator function that sets up the environment
+        and yields control back to the test.
+    """
+    with get_session() as session, monkeypatch.context() as ctx:
+        data = {
+            "name": "A manager",
+            "email": "manager@dm.com",
+            "role": "Manager",
+            "department": "Management",
+            "currency": "USD",
+        }
+        password = "1234"
+        employee, _ = add_employee(session, Employee(**data), password)
+        ctx.setenv("EMPLOYEE_EMAIL", employee.email)
+        ctx.setenv("EMPLOYEE_PASSWORD", password)
+        session.commit()
+        yield
+
+
 @pytest.mark.unit
-def test_update_points_to_existing_employee():
+def test_update_points_to_existing_employee() -> None:
     """
     Test the update of points to an existing employee.
 
@@ -49,7 +81,7 @@ def test_update_points_to_existing_employee():
 
 
 @pytest.mark.unit
-def test_update_points_to_multiple_employees():
+def test_update_points_to_multiple_employees() -> None:
     """
     Test updating points for multiple employees in the Engineering department.
 
@@ -101,7 +133,7 @@ def test_update_points_to_multiple_employees():
 
 
 @pytest.mark.unit
-def test_update_points_no_employees_found():
+def test_update_points_no_employees_found() -> None:
     """
     Test case for updating points when no employees are found.
 
@@ -113,7 +145,7 @@ def test_update_points_no_employees_found():
 
 
 @pytest.mark.unit
-def test_update_points_to_all_employees():
+def test_update_points_to_all_employees() -> None:
     """
     Test the update of points to all employees.
 
@@ -160,4 +192,7 @@ def test_update_points_to_all_employees():
         result = session.exec(sql)
 
         for data in result:
-            assert data.balance[0].value == previous_balance.popleft() + 25
+            if data.email == "manager@dm.com":
+                assert data.balance[0].value == previous_balance.popleft()
+            else:
+                assert data.balance[0].value == previous_balance.popleft() + 25

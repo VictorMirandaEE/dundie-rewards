@@ -1,10 +1,46 @@
 """dundie update subcommand integration test."""
 
+from typing import Generator
+
 import pytest
 from click.testing import CliRunner
 
 from dundie.cli import load, update
+from dundie.database import get_session
+from dundie.models import Employee
+from dundie.utils.db import add_employee
 from integration.constants import EMPLOYEES_FILE
+
+
+@pytest.fixture(autouse=True)
+def _auth(monkeypatch: pytest.MonkeyPatch) -> Generator[None, None, None]:
+    """Fixture to set up an authenticated environment for testing.
+
+    This function uses a monkeypatch context to set environment variables
+    for an employee's email and password. It creates a manager employee
+    in the database with the specified credentials and commits the session.
+
+    Args:
+        monkeypatch: A pytest fixture used to modify or set environment variables.
+
+    Yields:
+        None: This is a generator function that sets up the environment
+        and yields control back to the test.
+    """
+    with get_session() as session, monkeypatch.context() as ctx:
+        data = {
+            "name": "A manager",
+            "email": "manager@dm.com",
+            "role": "Manager",
+            "department": "Management",
+            "currency": "USD",
+        }
+        password = "1234"
+        employee, _ = add_employee(session, Employee(**data), password)
+        ctx.setenv("EMPLOYEE_EMAIL", employee.email)
+        ctx.setenv("EMPLOYEE_PASSWORD", password)
+        session.commit()
+        yield
 
 
 @pytest.fixture

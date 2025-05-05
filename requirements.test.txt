@@ -9,6 +9,7 @@ pytest-cov
 flake8
 flake8-pytest-style
 pyproject-flake8
+pep8-naming
 black
 isort
 mypy

@@ -3,7 +3,6 @@
 This module contains the business logic for the Dundie application.
 """
 
-import os
 from csv import DictReader
 from csv import Error as CSVError
 from decimal import Decimal
@@ -15,6 +14,7 @@ from sqlmodel import select
 from dundie.database import get_session
 from dundie.models import Employee
 from dundie.settings import DATE_FORMAT, Query, ResultDict
+from dundie.utils.authentication import require_authentication
 from dundie.utils.db import add_employee, add_transaction
 from dundie.utils.exchange import get_exchange_rates
 from dundie.utils.log import get_logger
@@ -186,7 +186,8 @@ def read(**query: Query) -> ResultDict:
     return return_data
 
 
-def update(value: Decimal, **query: Query) -> str:
+@require_authentication
+def update(value: Decimal, from_employee: Employee, **query: Query) -> str:
     """
     Update the balance of employees based on the given value and query\
     parameters.
@@ -194,20 +195,19 @@ def update(value: Decimal, **query: Query) -> str:
     This function retrieves employees matching the provided query parameters,
     updates their balance by the specified value, and logs the transaction. If
     no employees are found, or if an employee is not present in the database,
-    appropriate messages are returned.
+    appropriate messages are returned. Additionally, it ensures that the
+    initiating employee has sufficient funds or superuser privileges to
+    perform the operation.
 
     Args:
         value (Decimal): The amount to update the balance by.
+        from_employee (Employee): The employee initiating the update.
         **query: Arbitrary keyword arguments used to filter employees.
 
     Returns:
         str: A message indicating the result of the operation. If no employees
         are found, or if an employee is missing in the database, a descriptive
         message is returned. Otherwise, an empty string is returned.
-
-    Environment Variables:
-        USER: The username of the person performing the update. Defaults to
-          "system" if not set.
     """
     result = ""
 
@@ -217,20 +217,51 @@ def update(value: Decimal, **query: Query) -> str:
         result = "No employees found"
         return result
 
+    total = len(employees) * value
+
+    if from_employee.balance[0].value < total and not from_employee.superuser:
+        result = f"Insufficient funds to transfer {total}"
+        return result
+
     with get_session() as session:
-        user = os.getenv("USER", "system")
         for employee in employees:
+            if employee["email"] == from_employee.email:
+                continue
+
             email = employee["email"]
             instance = session.exec(
                 select(Employee).where(Employee.email == email)
             ).first()
             if instance:
                 add_transaction(
-                    session, instance, value, "Updated points", user
+                    session,
+                    instance,
+                    value,
+                    "Updated points",
+                    from_employee.email,
                 )
             else:
                 result = f"Employee {email!r} not found in the database"
                 return result
+
+            if not from_employee.superuser:
+                instance = session.exec(
+                    select(Employee).where(
+                        Employee.email == from_employee.email
+                    )
+                ).first()
+                if instance:
+                    add_transaction(
+                        session,
+                        instance,
+                        -value,
+                        "Updated points",
+                        from_employee.email,
+                    )
+                else:
+                    result = f"Employee {from_employee.email!r}\
+                          not found in the database"
+                    return result
 
         session.commit()
 
