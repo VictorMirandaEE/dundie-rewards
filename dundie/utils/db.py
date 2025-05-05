@@ -17,7 +17,9 @@ from dundie.settings import (
 from dundie.utils.email import send_email
 
 
-def add_employee(session: Session, employee: Employee) -> tuple:
+def add_employee(
+    session: Session, employee: Employee, password: str | None = None
+) -> tuple:
     """
     Add an employee to the database.
 
@@ -29,6 +31,8 @@ def add_employee(session: Session, employee: Employee) -> tuple:
     Args:
         session (Session): The database session to use for adding the employee.
         employee (Employee): The employee object to add.
+        password (str | None, optional): The password to set for the employee.
+          If None, an auto-generated random password will be used.
 
     Returns:
         tuple: A tuple containing the employee object and a boolean indicating
@@ -52,7 +56,7 @@ def add_employee(session: Session, employee: Employee) -> tuple:
     else:
         session.add(employee)
         set_initial_balance(session, employee)
-        password = set_initial_password(session, employee)
+        password = set_initial_password(session, employee, password)
         # TODO: Encrypt password and send link to reset it
         # TODO: Use queue to send email
         send_email(
@@ -136,18 +140,27 @@ def add_transaction(
         session.add(employee)
 
 
-def set_initial_password(session: Session, employee: Employee) -> str:
-    """
-    Set the initial password for an employee in the database.
+def set_initial_password(
+    session: Session, employee: Employee, password: str | None = None
+) -> str:
+    """Set the initial password for an employee in the database.
 
     Args:
         session (Session): The database session to use for setting the
           password.
         employee (Employee): The employee object for whom the password is set.
+        password (str | None, optional): The password to set for the employee.
+          If None, an auto-generated random password will be used.
 
     Returns:
         str: The password that was set for the employee.
     """
     user = User(employee=employee)
+
+    if password is not None:
+        user.password = password
+    else:
+        password = user.password
+
     session.add(user)
-    return user.password
+    return password

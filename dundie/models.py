@@ -72,6 +72,22 @@ class Employee(SQLModelValidation, table=True):
         },
     )
 
+    @property
+    def superuser(self) -> bool:
+        """Determine if the employee has superuser privileges based on their role.
+
+        A superuser is identified by having a role that matches one of the predefined
+        superuser roles, such as "Manager" or "Director".
+
+        Returns:
+            bool: True if the employee is a superuser, False otherwise.
+        """
+        # TODO: Implement as Field or RBAC (Role-Based Access Control) table
+        superuser_roles = ["Manager", "Director"]
+        return any(
+            superuser_role in self.role for superuser_role in superuser_roles
+        )
+
     balance: list["Balance"] = Relationship(back_populates="employee")
     transaction: list["Transaction"] = Relationship(back_populates="employee")
     user: list["User"] = Relationship(back_populates="employee")

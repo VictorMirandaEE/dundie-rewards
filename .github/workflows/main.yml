@@ -37,10 +37,11 @@ jobs:
         run: mypy
       - name: Run code style check
         run: pflake8
+
       - name: Run code import order check
         uses: isort/isort-action@v1
         with:
-          configuration: '--profile black --check-only --diff'
+          configuration: '--check-only --diff'
       - name: Run code formatting check
         uses: psf/black@stable
         with:
