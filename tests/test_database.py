@@ -20,6 +20,7 @@ from dundie.utils.db import (
     set_initial_balance,
     set_initial_password,
 )
+from dundie.utils.user import verify_password
 
 from .constants import (
     DATABASE_SCHEMA,
@@ -97,7 +98,7 @@ def test_positive_add_employee_associate():
         result = session.exec(sql).first()
 
         assert result.model_dump() == SALES_ASSOCIATE_DATA
-        assert result.balance[0].value == DEFAULT_ASSOCIATE_POINTS
+        assert result.balance.value == DEFAULT_ASSOCIATE_POINTS
         assert len(result.transaction) == 1
         assert result.transaction[-1].value == DEFAULT_ASSOCIATE_POINTS
 
@@ -140,7 +141,7 @@ def test_positive_add_employee_manager():
         result = session.exec(sql).first()
 
         assert result.model_dump() == SALES_MANAGER_DATA
-        assert result.balance[0].value == DEFAULT_MANAGER_POINTS
+        assert result.balance.value == DEFAULT_MANAGER_POINTS
         assert len(result.transaction) == 1
         assert result.transaction[-1].value == DEFAULT_MANAGER_POINTS
 
@@ -182,7 +183,7 @@ def test_positive_set_initial_balance_associate():
         result = session.exec(sql).first()
 
         assert result.model_dump() == SALES_ASSOCIATE_DATA
-        assert result.balance[0].value == DEFAULT_ASSOCIATE_POINTS
+        assert result.balance.value == DEFAULT_ASSOCIATE_POINTS
         assert len(result.transaction) == 1
         assert result.transaction[-1].value == DEFAULT_ASSOCIATE_POINTS
 
@@ -224,7 +225,7 @@ def test_positive_set_initial_balance_manager():
         result = session.exec(sql).first()
 
         assert result.model_dump() == SALES_MANAGER_DATA
-        assert result.balance[0].value == DEFAULT_MANAGER_POINTS
+        assert result.balance.value == DEFAULT_MANAGER_POINTS
         assert len(result.transaction) == 1
         assert result.transaction[-1].value == DEFAULT_MANAGER_POINTS
 
@@ -339,7 +340,7 @@ def test_positive_update_employee() -> None:
             # See https://github.com/python/mypy/issues/2608
         )
         assert result.model_dump() == updated_data
-        assert result.balance[0].value == DEFAULT_ASSOCIATE_POINTS
+        assert result.balance.value == DEFAULT_ASSOCIATE_POINTS
         assert len(result.transaction) == 1
         assert result.transaction[-1].value == DEFAULT_ASSOCIATE_POINTS
 
@@ -389,7 +390,7 @@ def test_positive_add_transaction(value: int | float) -> None:
             # See https://github.com/python/mypy/issues/2608
         )
 
-        previous_balance = instance.balance[0].value
+        previous_balance = instance.balance.value
 
         add_transaction(
             session, instance, Decimal(value), "Updated points", "manager"
@@ -409,7 +410,7 @@ def test_positive_add_transaction(value: int | float) -> None:
             # Workaround to avoid MyPy error due to None check.
             # See https://github.com/python/mypy/issues/2608
         )
-        assert instance.balance[0].value == previous_balance + Decimal(value)
+        assert instance.balance.value == previous_balance + Decimal(value)
         assert len(instance.transaction) == 2
         assert instance.transaction[1].value == Decimal(value)
         assert instance.transaction[1].description == "Updated points"
@@ -452,7 +453,7 @@ def test_positive_add_transaction_default_actor() -> None:
             # See https://github.com/python/mypy/issues/2608
         )
 
-        previous_balance = instance.balance[0].value
+        previous_balance = instance.balance.value
 
         add_transaction(session, instance, Decimal(value), "Updated points")
 
@@ -470,7 +471,7 @@ def test_positive_add_transaction_default_actor() -> None:
             # Workaround to avoid MyPy error due to None check.
             # See https://github.com/python/mypy/issues/2608
         )
-        assert instance.balance[0].value == previous_balance + Decimal(value)
+        assert instance.balance.value == previous_balance + Decimal(value)
         assert len(instance.transaction) == 2
         assert instance.transaction[1].value == Decimal(value)
         assert instance.transaction[1].description == "Updated points"
@@ -499,7 +500,7 @@ def test_set_initial_password(mock_generate_password):
     with get_session() as session:
         employee = Employee(**SALES_ASSOCIATE_DATA)
         session.add(employee)
-        password = set_initial_password(session, employee)
+        password = set_initial_password(session, employee, "mocked_password")
 
         assert password == "mocked_password"
 
@@ -511,4 +512,4 @@ def test_set_initial_password(mock_generate_password):
         )
         result = session.exec(sql).first()
 
-        assert result.user[0].password == "mocked_password"
+        assert verify_password("mocked_password", result.user.password)

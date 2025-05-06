@@ -165,7 +165,7 @@ def read(**query: Query) -> ResultDict:
         for employee in results:
             total = (
                 exchange_rates[employee.currency].value
-                * employee.balance[0].value
+                * employee.balance.value
             )
 
             return_data.append(
@@ -174,7 +174,7 @@ def read(**query: Query) -> ResultDict:
                     "email": employee.email,
                     "role": employee.role,
                     "department": employee.department,
-                    "balance": employee.balance[0].value,
+                    "balance": employee.balance.value,
                     "currency": employee.currency,
                     "total": total,
                     "last_transaction": employee.transaction[-1].date.strftime(
@@ -219,7 +219,7 @@ def update(value: Decimal, from_employee: Employee, **query: Query) -> str:
 
     total = len(employees) * value
 
-    if from_employee.balance[0].value < total and not from_employee.superuser:
+    if from_employee.balance.value < total and not from_employee.superuser:
         result = f"Insufficient funds to transfer {total}"
         return result
 

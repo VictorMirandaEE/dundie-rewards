@@ -49,6 +49,14 @@ def send_email(
     """
     log = get_logger()
 
+    log.debug(
+        "Sending email from '%s' to '%s' with subject '%s' and body '%s'",
+        sender,
+        recipient,
+        subject,
+        body,
+    )
+
     if not isinstance(recipient, list):
         recipient = [recipient]
     try:

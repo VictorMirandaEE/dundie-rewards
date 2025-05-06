@@ -1,7 +1,5 @@
 """Database module of dundie."""
 
-from __future__ import annotations
-
 from decimal import Decimal
 from typing import Optional
 
@@ -15,6 +13,7 @@ from dundie.settings import (
     EMAIL_FROM,
 )
 from dundie.utils.email import send_email
+from dundie.utils.user import generate_password_hash
 
 
 def add_employee(
@@ -136,7 +135,7 @@ def add_transaction(
     if not employee.balance:
         session.add(Balance(employee=employee, value=balance))
     else:
-        employee.balance[0].value = balance
+        employee.balance.value = balance
         session.add(employee)
 
 
@@ -162,5 +161,8 @@ def set_initial_password(
     else:
         password = user.password
 
+    user.password = generate_password_hash(password)
+
     session.add(user)
+
     return password

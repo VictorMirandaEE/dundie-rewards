@@ -88,9 +88,22 @@ class Employee(SQLModelValidation, table=True):
             superuser_role in self.role for superuser_role in superuser_roles
         )
 
-    balance: list["Balance"] = Relationship(back_populates="employee")
+    """
+    NOTE:
+    Forward referencing in Python occurs when a class or type hint is
+    referenced before its definition is fully processed by the interpreter.
+    To handle forward references in type hints, you can use string literals for
+    the type annotation. By enclosing the class name in quotes, you defer the
+    resolution of the type until the class definition is complete.
+    """
+
+    balance: "Balance" = Relationship(
+        back_populates="employee", sa_relationship_kwargs={"uselist": False}
+    )
     transaction: list["Transaction"] = Relationship(back_populates="employee")
-    user: list["User"] = Relationship(back_populates="employee")
+    user: "User" = Relationship(
+        back_populates="employee", sa_relationship_kwargs={"uselist": False}
+    )
 
 
 class Balance(SQLModelValidation, table=True):
@@ -221,7 +234,7 @@ if __name__ == "__main__":
                 "-",
                 _employee.role,
                 "-",
-                _employee.balance[0].value,
+                _employee.balance.value,
             )
         print()
 

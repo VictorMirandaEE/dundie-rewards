@@ -45,6 +45,9 @@ class VariableWrapper:
         self.name = name
 
 
+Query = Dict[str, Any]
+ResultDict = List[Dict[str, Any]]
+
 SMTP_HOST: str = "localhost"
 SMTP_PORT: int = 8025
 SMTP_TIMEOUT: int = 5
@@ -74,13 +77,10 @@ log_file = VariableWrapper(LOG_FILE, "LOG_FILE")
 LOG_FORMAT: str = (
     "%(asctime)s %(name)s %(levelname)s l:%(lineno)d f:%(filename)s: %(message)s"  # noqa: E501
 )
-LOG_LEVEL: str = "WARNING"
-LOG_MAX_BYTES: int = 500  # recommended: 1_000_000
+LOG_LEVEL: str = "DEBUG"  # INFO, DEBUG, WARNING, ERROR, CRITICAL
+LOG_MAX_BYTES: int = 10 * 1024  # recommended: 1_000_000
 LOG_BACKUP_COUNT: int = 3
 
 API_BASE_URL: str = (
     "https://economia.awesomeapi.com.br/json/last/USD-{currency}"
 )
-
-Query = Dict[str, Any]
-ResultDict = List[Dict[str, Any]]
