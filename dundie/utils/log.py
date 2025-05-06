@@ -2,7 +2,8 @@
 
 import logging
 import os
-from logging import Logger, handlers
+from logging import Logger
+from logging.handlers import RotatingFileHandler
 
 from dundie.settings import (
     LOG_BACKUP_COUNT,
@@ -15,48 +16,69 @@ from dundie.settings import (
 
 # TODO: Use lib (loguru)
 
+log: logging.Logger | None = None
 
-def get_logger(logfile: str = LOG_FILE) -> Logger:
-    """
-    Create and configure a logger.
+
+def set_logger(logfile: str = LOG_FILE) -> None:
+    """Create and configure a log.
 
     Args:
         logfile (str): The path to the log file. Defaults to LOGFILE.
 
     Returns:
-        Logger: Configured logger instance.
+        log: Configured log instance.
 
-    The logger is configured to write log messages to a rotating file handler
+    The log is configured to write log messages to a rotating file handler
     with a maximum file size of 500 bytes and up to 3 backup files. The log
     level is determined by the 'LOG_LEVEL' environment variable, defaulting
     to 'WARNING' if not set. The log messages are formatted to include the
-    timestamp, logger name, log level, line number, filename, and message.
+    timestamp, log name, log level, line number, filename, and message.
     """
-    # logging handler
-    # ch = logging.StreamHandler() # write to console/terminal/stderr
-    # by default the log file has the same name as the script with the
-    # extension .log
+    global log
 
-    log_level = os.getenv("LOG_LEVEL", LOG_LEVEL).upper()
-
-    # local logging instance
+    # Create local logging instance
     log = logging.getLogger(LOG_NAME)
-    # logfile = sys.argv[0]
-    # logfile = logfile[2:-3] + ".log"
-    fmt = logging.Formatter(LOG_FORMAT)
 
-    fh = handlers.RotatingFileHandler(
+    # Set the log level based on the environment variable or use the default
+    log_level = os.getenv("LOG_LEVEL", LOG_LEVEL).upper()
+    log.setLevel(log_level)
+
+    # Setup rotating file handler
+    handler = RotatingFileHandler(
         logfile,
         maxBytes=LOG_MAX_BYTES,
         backupCount=LOG_BACKUP_COUNT,
     )
-    # logging handler logging level
-    # ch.setLevel(log_level)
-    fh.setLevel(log_level)
-    # logging formatting
-    # ch.setFormatter(fmt)
-    fh.setFormatter(fmt)
-    # logging destination
-    # log.addHandler(ch)
-    log.addHandler(fh)
+
+    # Set the log formatter
+    formatter = logging.Formatter(LOG_FORMAT)
+    handler.setFormatter(formatter)
+
+    # Add the handler to the logger
+    log.addHandler(handler)
+
+
+def get_logger() -> Logger:
+    """
+    Retrieve the global logger instance.
+
+    This function ensures that a logger instance is initialized and available
+    for use. If the logger is not already initialized, it attempts to initialize
+    it by calling `set_logger()`. If the logger still remains uninitialized,
+    a `RuntimeError` is raised.
+
+    Returns:
+        Logger: The global logger instance.
+
+    Raises:
+        RuntimeError: If the logger is not initialized after attempting to set it.
+    """
+    global log
+
+    if log is None:
+        set_logger()
+
+    if log is None:
+        raise RuntimeError("Logger not initialized")
+
     return log

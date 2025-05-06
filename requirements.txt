@@ -6,3 +6,4 @@ pydantic[email]
 sqlmodel
 alembic
 httpx
+pwdlib[argon2]

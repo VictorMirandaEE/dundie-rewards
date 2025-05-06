@@ -9,6 +9,7 @@ from sqlmodel import select
 
 from dundie.database import get_session
 from dundie.models import Employee
+from dundie.utils.user import verify_password
 
 
 class AuthenticationError(Exception):
@@ -65,8 +66,9 @@ def require_authentication(func: Callable) -> Callable:
                     f"Employee with email {email!r} not found."
                 )
 
-            # TODO: Encrypt password and compare with stored hash
-            if employee.user[0].password != password:
+            if password is not None and not verify_password(
+                password, employee.user.password
+            ):
                 raise AuthenticationError("Invalid password.")
 
         # Dependency injection

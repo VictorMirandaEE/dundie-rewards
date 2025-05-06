@@ -71,7 +71,7 @@ def test_update_points_to_existing_employee() -> None:
         )
         result = session.exec(sql).first()
 
-        previous_balance = result.balance[0].value
+        previous_balance = result.balance.value
 
     update(100, email=SALES_ASSOCIATE_DATA["email"])
 
@@ -114,7 +114,7 @@ def test_update_points_to_multiple_employees() -> None:
         result = session.exec(sql)
 
         for data in result:
-            previous_balance.append(data.balance[0].value)
+            previous_balance.append(data.balance.value)
 
     previous_balance = deque(previous_balance)
 
@@ -127,9 +127,9 @@ def test_update_points_to_multiple_employees() -> None:
 
         for data in result:
             if data.department == department:
-                assert data.balance[0].value == previous_balance.popleft() + 50
+                assert data.balance.value == previous_balance.popleft() + 50
             else:
-                assert data.balance[0].value == previous_balance.popleft()
+                assert data.balance.value == previous_balance.popleft()
 
 
 @pytest.mark.unit
@@ -181,7 +181,7 @@ def test_update_points_to_all_employees() -> None:
         result = session.exec(sql)
 
         for data in result:
-            previous_balance.append(data.balance[0].value)
+            previous_balance.append(data.balance.value)
 
     previous_balance = deque(previous_balance)
 
@@ -193,6 +193,6 @@ def test_update_points_to_all_employees() -> None:
 
         for data in result:
             if data.email == "manager@dm.com":
-                assert data.balance[0].value == previous_balance.popleft()
+                assert data.balance.value == previous_balance.popleft()
             else:
-                assert data.balance[0].value == previous_balance.popleft() + 25
+                assert data.balance.value == previous_balance.popleft() + 25
