@@ -61,13 +61,17 @@ def send_email(
         recipient = [recipient]
     try:
         with smtplib.SMTP(
-            host=SMTP_HOST, port=SMTP_PORT, timeout=SMTP_TIMEOUT
+            host=SMTP_HOST,
+            port=SMTP_PORT,
+            timeout=SMTP_TIMEOUT,
         ) as server:
             message = MIMEText(body)
             message["From"] = sender
             message["To"] = (",").join(recipient)
             message["Subject"] = subject
-            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.user = SMTP_USERNAME
+            server.password = SMTP_PASSWORD
+            server.auth_plain()
             server.sendmail(sender, recipient, message.as_string())
     except Exception as error_msg:
         log.error("Error sending email to %s: %s", recipient, error_msg)
