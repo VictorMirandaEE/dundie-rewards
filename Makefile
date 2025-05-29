@@ -1,4 +1,4 @@
-.PHONY: install venv ipython test watch lint format clean docs docs-serve build publish-test publish
+.PHONY: install venv ipython test watch lint format clean docs docs-serve build all_wheels publish-test publish
 
 
 # Install for dev and test environments - Development Mode (a.k.a. “Editable Installs”).

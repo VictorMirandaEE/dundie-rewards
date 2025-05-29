@@ -7,3 +7,4 @@ sqlmodel
 alembic
 httpx
 pwdlib[argon2]
+aiosmtpd
