@@ -164,8 +164,7 @@ def read(**query: Query) -> ResultDict:
         results = session.exec(sql)
         for employee in results:
             total = (
-                exchange_rates[employee.currency].value
-                * employee.balance.value
+                exchange_rates[employee.currency].value * employee.balance.value
             )
 
             return_data.append(
