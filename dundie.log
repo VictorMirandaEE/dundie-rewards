@@ -1,0 +1,6 @@
+2025-06-09 10:00:53,469 dundie DEBUG l:52 f:email.py: Sending email from 'system@dundie.com' to 'jim@dundermifflin.com' with subject 'Your dundie password' and body 'Your password is: Op69Xv2i'
+2025-06-09 10:00:53,508 dundie DEBUG l:52 f:email.py: Sending email from 'system@dundie.com' to 'schrute@dundermifflin.com' with subject 'Your dundie password' and body 'Your password is: ugM3nioj'
+2025-06-09 10:00:53,544 dundie DEBUG l:52 f:email.py: Sending email from 'system@dundie.com' to 'gabe@dundermifflin.com' with subject 'Your dundie password' and body 'Your password is: CsKYWewh'
+2025-06-09 10:00:53,579 dundie DEBUG l:52 f:email.py: Sending email from 'system@dundie.com' to 'mike@dd.com' with subject 'Your dundie password' and body 'Your password is: qKtXTGsH'
+2025-06-09 10:00:53,614 dundie DEBUG l:52 f:email.py: Sending email from 'system@dundie.com' to 'pam@dd.com' with subject 'Your dundie password' and body 'Your password is: 0V5Y9hJZ'
+2025-06-09 10:00:53,648 dundie DEBUG l:52 f:email.py: Sending email from 'system@dundie.com' to 'creed@dd.com' with subject 'Your dundie password' and body 'Your password is: Tyi9n5fd'
