@@ -36,15 +36,15 @@ If you find a bug or have a feature request, please open an issue on GitHub. Be 
 
 To set up a development environment, follow these steps:
 
-1. **Install dependencies**:
+1. **Install dependencies**
 
-    Install the required dependencies.
+    Install the required dependencies:
 
         make install
 
-1. **Load Python virtual environment**:
+1. **Load Python virtual environment**
 
-    Load Python virtual environment.
+    Load Python virtual environment:
 
         # For 'sh' or 'bash' shell:
         source .venv/bin/activate
@@ -53,16 +53,16 @@ To set up a development environment, follow these steps:
         # Example for 'fish' shell
         source .venv/bin/activate.fish
 
-1. **Run source code checker and formatting tools**:
+1. **Run source code checker and formatting tools**
 
-    Run source code checker and formatting tools before committing any changes.
+    Run source code checker and formatting tools before committing any changes:
 
         make lint
         make fmt
 
-1. **Run tests**:
+1. **Run tests**
 
-   Run the test suite to ensure everything is working correctly.
+   Run the test suite to ensure everything is working correctly:
 
         make test
         # or

@@ -1,9 +1,0 @@
-click
-rich
-rich-click
-pydantic
-pydantic[email]
-sqlmodel
-alembic
-httpx
-pwdlib[argon2]

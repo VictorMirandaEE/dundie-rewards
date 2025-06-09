@@ -15,7 +15,7 @@ build-backend = "setuptools.build_meta"
 # Project (metadata, build, install) specifications
 [project]
 name = "dundie"
-dynamic = ["version", "readme", "dependencies", "optional-dependencies"]
+dynamic = ["version", "readme"]
 requires-python = ">=3.10"
 authors = [
     {name = "Victor Miranda", email = "victor@dundermifflin.com"}
@@ -39,6 +39,17 @@ classifiers = [
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
 ]
+dependencies = [
+    "aiosmtpd>=1.4.6",
+    "alembic>=1.16.1",
+    "click>=8.2.1",
+    "httpx>=0.28.1",
+    "pwdlib[argon2]>=0.2.1",
+    "pydantic[email]>=2.11.5",
+    "rich>=14.0.0",
+    "rich-click>=1.8.9",
+    "sqlmodel>=0.0.24",
+]
 
 [project.urls]
 Homepage = "https://dundermifflin.com"
@@ -49,14 +60,22 @@ dundie = "dundie.__main__:main"
 
 [project.gui-scripts]
 
+[project.optional-dependencies]
+test = [
+    "coverage>=7.8.2",
+    "pep8-naming>=0.15.1",
+    "pytest>=8.4.0",
+    "pytest-cov>=6.1.1",
+    "pytest-forked>=1.6.0",
+    "setuptools>=80.9.0",
+    "setuptools-scm>=8.3.1",
+]
+
 [tool.setuptools]
 packages = ["dundie"]
 
 [tool.setuptools.dynamic]
 readme = {file = "README.md"}
-dependencies = {file = ["requirements.txt"]}
-optional-dependencies.dev = {file = ["requirements.dev.txt"]}
-optional-dependencies.test = {file = ["requirements.test.txt"]}
 
 [tool.setuptools_scm]
 
@@ -72,45 +91,49 @@ markers = [
     "low: Low priority",
 ]
 
-[tool.mypy]
-packages = "dundie"
-warn_unused_configs = true
-show_error_code_links = true
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-disallow_untyped_decorators = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_return_any = true
-warn_unreachable = true
-# strict = true
-pretty = true
+[dependency-groups]
+dev = [
+    "ipdb>=0.13.13",
+    "pep8-naming>=0.15.1",
+    "pudb>=2025.1",
+    "pytest-watch>=4.2.0",
+    "setuptools>=80.9.0",
+    "setuptools-scm>=8.3.1",
+    "taskipy>=1.14.1",
+    "types-setuptools>=80.9.0.20250529",
+]
 
-[tool.flake8]
-exclude = [".venv", "build", ".vscodelocal", "migrations"]
-max-line-length = 79
-inline-quotes = '"'
-extend-select = ["B950"]
-extend-ignore = ["E203", "E501", "E701"]
+[tool.ruff]
+line-length = 80
+indent-width = 4
+target-version = "py310"
 
-[tool.black]
-target-version = ["py313"]
-line-length = 79
-verbose = true
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.venv
-  | _build
-  | build
-  | dist
-  | migrations
-)/
-'''
-
-[tool.isort]
-profile = "black"
-src_paths = ["dundie", "tests", "integration"]
-line_length = 79
+[tool.taskipy.tasks]
+lint = {help="Run static code analysis using Ruff", cmd="uvx ruff check dundie integration tests"}
+format = {help="Format code using Ruff", cmd="uvx ruff format dundie integration tests"}
+test = {help="Run tests with pytest and coverage", cmd="""
+    uv run --extra test pytest -s  --forked --cov=dundie --cov-branch
+    uv run --extra test coverage xml
+    uv run --extra test coverage html
+    """}
+docs = {help="Build the documentation", cmd="uvx mkdocs build --clean"}
+docs-serve = {help="Serve the documentation locally", cmd="uvx mkdocs serve"}
+clean = {help= "Clean up the project directory", cmd="""
+    find ./ -name '*.pyc' -exec rm -f {} \\;
+    find ./ -depth -name '__pycache__' -exec rm -rf {} \\;
+    find ./ -name 'Thumbs.db' -exec rm -f {} \\;
+    find ./ -name '*~' -exec rm -f {} \\;
+    rm -rf {.cache,.pytest_cache,.mypy_cache,htmlcov,docs/_build}
+    """}
+resetdb = {help="Reset the project database", cmd="""
+    read -p "Are you sure you want to reset the project db? [y/N] " -n 1 -r
+    echo    # (optional) move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        rm -rf assets/database.db
+        uv run python -m aiosmtpd -n &
+        uv run dundie load assets/employees.csv
+        uv run alembic stamp head
+        pkill -f aiosmtpd
+    fi
+    """}

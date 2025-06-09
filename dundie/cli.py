@@ -60,7 +60,7 @@ def load(filepath: str) -> None:
     - Displays the data.
     """
     table = Table(title="Dunder Mifflin Employees")
-    headers = ["Name", "e-mail", "Role", "Department", "Currency", "Created"]
+    headers = ["Name", "Email", "Role", "Department", "Currency", "Created"]
     for header in headers:
         table.add_column(header, header_style="magenta", highlight=True)
 
@@ -113,8 +113,18 @@ def show(**query: Query) -> None:
         return
 
     table = Table(title="Dunder Mifflin Rewards Report")
-    for key in result[0].keys():
-        table.add_column(key.title(), header_style="magenta", highlight=True)
+    headers = [
+        "Name",
+        "Email",
+        "Role",
+        "Department",
+        "Balance",
+        "Currency",
+        "Total",
+        "Last Transaction",
+    ]
+    for header in headers:
+        table.add_column(header, header_style="magenta", highlight=True)
 
     for employee in result:
         employee["balance"] = f"{employee['balance']:.2f}"
