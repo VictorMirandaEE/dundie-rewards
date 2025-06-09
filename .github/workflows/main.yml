@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ['3.10', '3.13']
+        python-version: ['3.13']
         os: [ubuntu-latest]
     runs-on: ${{matrix.os}}
     steps:
@@ -31,21 +31,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{matrix.python-version}}
-      - name: Install Project
-        run: pip install '.[test]'
-      - name: Run typing check
-        run: mypy
-      - name: Run code style check
-        run: pflake8
-
-      - name: Run code import order check
-        uses: isort/isort-action@v1
-        with:
-          configuration: '--check-only --diff'
-      - name: Run code formatting check
-        uses: psf/black@stable
-        with:
-          options: '--check --diff'
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Install the project
+        run: uv sync --all-extras --dev
+      - name: Look for style errors
+        run: uvx ruff check --diff dundie tests integration
+      - name: Check for importing style
+        run: uvx ruff format --check --diff dundie tests integration
   tests:
     needs: lint
     strategy:
@@ -59,10 +52,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{matrix.python-version}}
-      - name: Install Project
-        run: pip install '.[test]'
-      - name: Run Tests
-        run: pytest -v --forked --junitxml=junit.xml -o junit_family=legacy --cov=dundie --cov-branch --cov-report=xml
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+      - name: Run tests
+        run: |
+          uv run --extra test pytest -v --forked --junitxml=junit.xml -o junit_family=legacy --cov=dundie --cov-branch --cov-report=xml
+          uv run --extra test coverage xml
       - name: Publish Test Results in JUnit XML format
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()

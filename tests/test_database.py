@@ -334,8 +334,7 @@ def test_positive_update_employee() -> None:
         result = session.exec(sql).first()
 
         assert (
-            result
-            is not None
+            result is not None
             # Workaround to avoid MyPy error due to None check.
             # See https://github.com/python/mypy/issues/2608
         )
@@ -384,8 +383,7 @@ def test_positive_add_transaction(value: int | float) -> None:
         instance = session.exec(sql).first()
 
         assert (
-            instance
-            is not None
+            instance is not None
             # Workaround to avoid MyPy error due to None check.
             # See https://github.com/python/mypy/issues/2608
         )
@@ -405,8 +403,7 @@ def test_positive_add_transaction(value: int | float) -> None:
         instance = session.exec(sql).first()
 
         assert (
-            instance
-            is not None
+            instance is not None
             # Workaround to avoid MyPy error due to None check.
             # See https://github.com/python/mypy/issues/2608
         )
@@ -447,8 +444,7 @@ def test_positive_add_transaction_default_actor() -> None:
         instance = session.exec(sql).first()
 
         assert (
-            instance
-            is not None
+            instance is not None
             # Workaround to avoid MyPy error due to None check.
             # See https://github.com/python/mypy/issues/2608
         )
@@ -466,8 +462,7 @@ def test_positive_add_transaction_default_actor() -> None:
         instance = session.exec(sql).first()
 
         assert (
-            instance
-            is not None
+            instance is not None
             # Workaround to avoid MyPy error due to None check.
             # See https://github.com/python/mypy/issues/2608
         )
